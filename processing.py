@@ -1,64 +1,21 @@
 #!/usr/bin/env python3
 """
-ESA SOIL MOISTURE DATA PROCESSOR - PRODUCTION READY
-===================================================
+ESA SOIL MOISTURE DATA PROCESSOR - PRODUCTION READY (FIXED)
+============================================================
 Processes downloaded soil moisture ZIP files and extracts NetCDF bands.
 
+FIXES:
+- Handles numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3)
+- Uses ds.sizes instead of ds.dims to avoid FutureWarning
+- Properly extracts all soil layers
+
 Features:
-- Extracts SSM, RZSM, and Freeze/Thaw variables from ZIP files
+- Extracts SSM, RZSM (all layers), and Freeze/Thaw variables from ZIP files
 - Organizes by variable type and date
 - Quality control and metadata extraction
 - Progress tracking and resume capability
 - Handles both daily and monthly aggregations
 - Creates summary statistics and data catalog
-
-Processing workflow:
-1. Scans raw ZIP files
-2. Extracts NetCDF files
-3. Separates variables into organized structure
-4. Generates metadata and statistics
-5. Creates data catalog
-
-Output structure:
-data/soil_moisture/
-├── raw/                          # Original ZIP files (input)
-│   ├── 2022/
-│   │   ├── soil_moisture_2022_01_combined_daily.zip
-│   │   └── soil_moisture_2022_02_combined_daily.zip
-│   └── 2023/
-├── processed/                    # Processed NetCDF files (output)
-│   ├── SSM/                      # Surface Soil Moisture
-│   │   ├── 2022/
-│   │   │   ├── SSM_2022_01_daily.nc
-│   │   │   └── SSM_2022_02_daily.nc
-│   │   └── 2023/
-│   ├── RZSM/                     # Root Zone Soil Moisture
-│   │   ├── 2022/
-│   │   └── 2023/
-│   └── freeze_thaw/              # Freeze/Thaw Classification
-│       ├── 2022/
-│       └── 2023/
-├── metadata/                     # Metadata and catalogs
-│   ├── data_catalog.csv
-│   ├── processing_log.json
-│   └── statistics_summary.json
-└── processing_progress.json
-
-Requirements:
-pip install netCDF4 xarray pandas numpy tqdm
-
-Usage:
-# Process all downloaded files
-python soil_moisture_processor.py
-
-# Process specific year
-python soil_moisture_processor.py --year 2022
-
-# Process and generate statistics
-python soil_moisture_processor.py --stats
-
-# Resume interrupted processing
-python soil_moisture_processor.py --resume
 
 Author: Production Ready
 Date: February 2026
@@ -74,6 +31,7 @@ import shutil
 from pathlib import Path
 from datetime import datetime
 import time
+import re
 
 try:
     import xarray as xr
@@ -109,16 +67,17 @@ class SoilMoistureProcessor:
     Processes downloaded ESA CCI Soil Moisture data:
     - Extracts NetCDF files from ZIP archives
     - Separates variables (SSM, RZSM, Freeze/Thaw)
+    - Handles numbered RZSM layers (rzsm_1, rzsm_2, rzsm_3)
     - Organizes by date and variable type
     - Generates metadata and statistics
     """
     
     # Variable mapping (internal name → possible NetCDF variable names)
-    # Each variable type can have multiple possible names in source files
+    # UPDATED: Now includes patterns to match numbered variables
     VARIABLE_MAPPING = {
         'SSM': ['sm'],                    # Surface soil moisture
-        'RZSM': ['rzsm'],                 # Root zone soil moisture  
-        'freeze_thaw': ['ft', 'flag']     # Freeze/thaw classification (can be 'ft' or 'flag')
+        'RZSM': ['rzsm'],                 # Root zone soil moisture (base name)
+        'freeze_thaw': ['ft', 'flag']     # Freeze/thaw classification
     }
     
     # Full variable names for documentation
@@ -126,14 +85,6 @@ class SoilMoistureProcessor:
         'SSM': 'surface_soil_moisture_volumetric',
         'RZSM': 'root_zone_soil_moisture_volumetric',
         'freeze_thaw': 'freeze_thaw_classification'
-    }
-    
-    # File patterns to identify variable types
-    # Some variables come in separate NetCDF files within the ZIP
-    FILE_PATTERNS = {
-        'SSM': ['SSMV', 'SSM'],           # Surface soil moisture files
-        'RZSM': ['RZSM'],                 # Root zone files
-        'freeze_thaw': ['FT', 'FREEZE']   # Freeze/thaw files
     }
     
     def __init__(self, base_dir="./data/soil_moisture"):
@@ -168,7 +119,8 @@ class SoilMoistureProcessor:
             'skipped': 0,
             'failed': 0,
             'total_size_mb': 0,
-            'variables_extracted': {var: 0 for var in ['SSM', 'RZSM', 'freeze_thaw']}
+            'variables_extracted': {var: 0 for var in ['SSM', 'RZSM', 'freeze_thaw']},
+            'rzsm_layers_found': set()  # Track which RZSM layers we've seen
         }
         
         logger.info("✅ Processor initialized")
@@ -211,8 +163,6 @@ class SoilMoistureProcessor:
         """
         Add CRS (Coordinate Reference System) information to dataset
         
-        Adds EPSG:4326 (WGS84) CRS attributes to ensure proper georeferencing.
-        
         Parameters:
         -----------
         ds : xarray.Dataset
@@ -234,13 +184,13 @@ class SoilMoistureProcessor:
                 'crs_wkt': 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]',
                 'epsg_code': 'EPSG:4326',
                 'proj4': '+proj=longlat +datum=WGS84 +no_defs',
-                'GeoTransform': 'None'  # Will be set based on actual grid
+                'GeoTransform': 'None'
             }
         )
         
         # Add grid_mapping attribute to all data variables
         for var in ds.data_vars:
-            if var != 'crs':  # Don't add to CRS itself
+            if var != 'crs':
                 ds[var].attrs['grid_mapping'] = 'crs'
         
         # Ensure lat/lon have proper attributes
@@ -270,6 +220,28 @@ class SoilMoistureProcessor:
         logger.debug("  ✓ Added CRS information (EPSG:4326)")
         
         return ds
+    
+    def find_rzsm_variables(self, ds):
+        """
+        Find all RZSM variables in dataset (including numbered ones like rzsm_1, rzsm_2, rzsm_3)
+        
+        Parameters:
+        -----------
+        ds : xarray.Dataset
+            Dataset to search
+        
+        Returns:
+        --------
+        list : List of RZSM variable names found
+        """
+        rzsm_vars = []
+        
+        # Check for numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3, etc.)
+        for var in ds.data_vars:
+            if re.match(r'^rzsm(_\d+)?$', var):
+                rzsm_vars.append(var)
+        
+        return sorted(rzsm_vars)
     
     def scan_raw_files(self, year=None):
         """
@@ -399,11 +371,6 @@ class SoilMoistureProcessor:
                     logger.info(f"  ✓ Extracted: {nc_file}")
             
             # Process each NetCDF file
-            # NOTE: ZIP files may contain multiple NetCDF files, each with different variables:
-            # - SSM files: contain 'sm' variable (surface soil moisture)
-            # - RZSM files: contain 'rzsm' variable (root zone soil moisture)  
-            # - FT files: contain 'ft' or 'flag' variable (freeze/thaw classification)
-            # We process all NetCDF files and extract the relevant variables from each
             for nc_file in nc_files:
                 nc_path = temp_dir / nc_file
                 
@@ -414,59 +381,106 @@ class SoilMoistureProcessor:
                     ds = xr.open_dataset(nc_path)
                     
                     logger.info(f"Variables in file: {list(ds.data_vars)}")
-                    logger.info(f"Dimensions: {dict(ds.dims)}")
+                    logger.info(f"Dimensions: {dict(ds.sizes)}")  # FIXED: Use ds.sizes instead of ds.dims
                     
-                    # Extract each variable type
-                    for var_type, possible_var_names in self.VARIABLE_MAPPING.items():
-                        # Find which variable name exists in this file
-                        nc_var = None
-                        for possible_name in possible_var_names:
-                            if possible_name in ds.data_vars:
-                                nc_var = possible_name
-                                break
+                    # 1. Process SSM (Surface Soil Moisture)
+                    if 'sm' in ds.data_vars:
+                        logger.info(f"  ✓ Found SSM (sm)")
                         
-                        if nc_var:
-                            logger.info(f"  ✓ Found {var_type} ({nc_var})")
+                        var_ds = ds[['sm']]
+                        var_ds = self.add_crs_information(var_ds)
+                        
+                        var_dir = self.processed_dir / 'SSM' / str(year)
+                        var_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        output_name = f"SSM_{year}_{month:02d}_{time_agg}.nc"
+                        output_path = var_dir / output_name
+                        
+                        logger.info(f"  💾 Saving to: {output_path}")
+                        var_ds.to_netcdf(output_path)
+                        
+                        var_data = ds['sm']
+                        valid_pixels = np.isfinite(var_data).sum().values
+                        
+                        logger.info(f"  📈 Valid pixels: {valid_pixels:,}")
+                        logger.info(f"  📏 Shape: {var_data.shape}")
+                        logger.info(f"  📊 Min: {float(var_data.min().values):.4f}")
+                        logger.info(f"  📊 Max: {float(var_data.max().values):.4f}")
+                        logger.info(f"  📊 Mean: {float(var_data.mean().values):.4f}")
+                        
+                        results['variables_found'].append('SSM')
+                        results['output_files'].append(str(output_path))
+                        self.stats['variables_extracted']['SSM'] += 1
+                    
+                    # 2. Process RZSM (Root Zone Soil Moisture) - ALL LAYERS
+                    rzsm_vars = self.find_rzsm_variables(ds)
+                    
+                    if rzsm_vars:
+                        logger.info(f"  ✓ Found RZSM variables: {rzsm_vars}")
+                        
+                        # Extract ALL RZSM variables into one file
+                        var_ds = ds[rzsm_vars]
+                        var_ds = self.add_crs_information(var_ds)
+                        
+                        var_dir = self.processed_dir / 'RZSM' / str(year)
+                        var_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        output_name = f"RZSM_{year}_{month:02d}_{time_agg}.nc"
+                        output_path = var_dir / output_name
+                        
+                        logger.info(f"  💾 Saving to: {output_path}")
+                        var_ds.to_netcdf(output_path)
+                        
+                        # Track which layers we've found
+                        for rzsm_var in rzsm_vars:
+                            self.stats['rzsm_layers_found'].add(rzsm_var)
                             
-                            # Extract this variable
-                            var_ds = ds[[nc_var]]
-                            
-                            # Add CRS information (EPSG:4326)
-                            var_ds = self.add_crs_information(var_ds)
-                            logger.info(f"  🌍 Added CRS: EPSG:4326")
-                            
-                            # Create year directory for this variable
-                            var_dir = self.processed_dir / var_type / str(year)
-                            var_dir.mkdir(parents=True, exist_ok=True)
-                            
-                            # Output filename
-                            output_name = f"{var_type}_{year}_{month:02d}_{time_agg}.nc"
-                            output_path = var_dir / output_name
-                            
-                            # Save with CRS information
-                            logger.info(f"  💾 Saving to: {output_path}")
-                            var_ds.to_netcdf(output_path)
-
-                            
-                            # Get stats
-                            var_data = ds[nc_var]
+                            var_data = ds[rzsm_var]
                             valid_pixels = np.isfinite(var_data).sum().values
                             
-                            logger.info(f"  📈 Valid pixels: {valid_pixels:,}")
-                            logger.info(f"  📏 Shape: {var_data.shape}")
-                            
-                            if var_type != 'freeze_thaw':  # Freeze/thaw is categorical
-                                logger.info(f"  📊 Min: {float(var_data.min().values):.4f}")
-                                logger.info(f"  📊 Max: {float(var_data.max().values):.4f}")
-                                logger.info(f"  📊 Mean: {float(var_data.mean().values):.4f}")
-                            
-                            results['variables_found'].append(var_type)
-                            results['output_files'].append(str(output_path))
-                            self.stats['variables_extracted'][var_type] += 1
-                        else:
-                            # Show which variable names were searched for
-                            searched_names = ', '.join(possible_var_names)
-                            logger.info(f"  ⚠️  {var_type} (searched: {searched_names}) not found in file")
+                            logger.info(f"  📈 {rzsm_var}: Valid pixels: {valid_pixels:,}")
+                            logger.info(f"     Shape: {var_data.shape}")
+                            logger.info(f"     Min: {float(var_data.min().values):.4f}")
+                            logger.info(f"     Max: {float(var_data.max().values):.4f}")
+                            logger.info(f"     Mean: {float(var_data.mean().values):.4f}")
+                        
+                        results['variables_found'].append('RZSM')
+                        results['output_files'].append(str(output_path))
+                        self.stats['variables_extracted']['RZSM'] += 1
+                    else:
+                        logger.info(f"  ⚠️  RZSM not found in file")
+                    
+                    # 3. Process Freeze/Thaw
+                    freeze_thaw_var = None
+                    for possible_name in ['ft', 'flag']:
+                        if possible_name in ds.data_vars:
+                            freeze_thaw_var = possible_name
+                            break
+                    
+                    if freeze_thaw_var:
+                        logger.info(f"  ✓ Found freeze_thaw ({freeze_thaw_var})")
+                        
+                        var_ds = ds[[freeze_thaw_var]]
+                        var_ds = self.add_crs_information(var_ds)
+                        
+                        var_dir = self.processed_dir / 'freeze_thaw' / str(year)
+                        var_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        output_name = f"freeze_thaw_{year}_{month:02d}_{time_agg}.nc"
+                        output_path = var_dir / output_name
+                        
+                        logger.info(f"  💾 Saving to: {output_path}")
+                        var_ds.to_netcdf(output_path)
+                        
+                        var_data = ds[freeze_thaw_var]
+                        valid_pixels = np.isfinite(var_data).sum().values
+                        
+                        logger.info(f"  📈 Valid pixels: {valid_pixels:,}")
+                        logger.info(f"  📏 Shape: {var_data.shape}")
+                        
+                        results['variables_found'].append('freeze_thaw')
+                        results['output_files'].append(str(output_path))
+                        self.stats['variables_extracted']['freeze_thaw'] += 1
                     
                     ds.close()
                     
@@ -538,19 +552,12 @@ class SoilMoistureProcessor:
             result = self.process_zip_file(zip_file, skip_if_exists)
             all_results.append(result)
             
-            # Small delay between files
             time.sleep(0.5)
         
         return all_results
     
     def generate_data_catalog(self):
-        """
-        Generate a catalog of all processed data
-        
-        Returns:
-        --------
-        pd.DataFrame : Data catalog
-        """
+        """Generate a catalog of all processed data"""
         logger.info("\n📋 Generating data catalog...")
         
         records = []
@@ -563,23 +570,17 @@ class SoilMoistureProcessor:
             
             for nc_file in sorted(var_dir.rglob("*.nc")):
                 try:
-                    # Open file
                     ds = xr.open_dataset(nc_file)
                     
-                    # Find which variable name exists in this file
-                    nc_var = None
-                    possible_var_names = self.VARIABLE_MAPPING[var_type]
-                    for possible_name in possible_var_names:
-                        if possible_name in ds.data_vars:
-                            nc_var = possible_name
-                            break
+                    # Get all data variables (excluding 'crs')
+                    data_vars = [v for v in ds.data_vars if v != 'crs']
                     
-                    if nc_var and nc_var in ds.data_vars:
-                        var_data = ds[nc_var]
+                    for var_name in data_vars:
+                        var_data = ds[var_name]
                         
-                        # Extract metadata
                         record = {
                             'variable_type': var_type,
+                            'variable_name': var_name,
                             'file_path': str(nc_file.relative_to(self.base_dir)),
                             'year': None,
                             'month': None,
@@ -598,7 +599,7 @@ class SoilMoistureProcessor:
                             record['month'] = int(parts[2])
                             record['time_agg'] = parts[3]
                         
-                        # Get spatial resolution from attributes
+                        # Get spatial resolution
                         if 'lat' in ds.dims and 'lon' in ds.dims:
                             lat_res = abs(float(ds.lat[1] - ds.lat[0]))
                             lon_res = abs(float(ds.lon[1] - ds.lon[0]))
@@ -624,11 +625,9 @@ class SoilMoistureProcessor:
                     logger.warning(f"⚠️  Could not process {nc_file}: {e}")
                     continue
         
-        # Create DataFrame
         if records:
             df = pd.DataFrame(records)
             
-            # Save catalog
             catalog_path = self.metadata_dir / "data_catalog.csv"
             df.to_csv(catalog_path, index=False)
             logger.info(f"✅ Data catalog saved: {catalog_path}")
@@ -644,7 +643,10 @@ class SoilMoistureProcessor:
         logger.info("\n📊 Generating statistics...")
         
         stats_summary = {
-            'processing_stats': self.stats,
+            'processing_stats': {
+                **self.stats,
+                'rzsm_layers_found': list(self.stats['rzsm_layers_found'])
+            },
             'timestamp': datetime.now().isoformat(),
             'processed_directory': str(self.processed_dir),
             'variable_counts': {}
@@ -657,7 +659,6 @@ class SoilMoistureProcessor:
                 nc_files = list(var_dir.rglob("*.nc"))
                 stats_summary['variable_counts'][var_type] = len(nc_files)
         
-        # Save statistics
         stats_path = self.metadata_dir / "statistics_summary.json"
         with open(stats_path, 'w') as f:
             json.dump(stats_summary, f, indent=2)
@@ -678,6 +679,10 @@ class SoilMoistureProcessor:
         print("\nVariables extracted:")
         for var, count in self.stats['variables_extracted'].items():
             print(f"  {var}: {count} file(s)")
+        
+        if self.stats['rzsm_layers_found']:
+            print(f"\nRZSM layers found: {sorted(self.stats['rzsm_layers_found'])}")
+        
         print("="*70)
 
 
@@ -685,7 +690,7 @@ def main():
     """Command-line interface"""
     
     parser = argparse.ArgumentParser(
-        description='Process ESA Soil Moisture Data - Production Ready',
+        description='Process ESA Soil Moisture Data - FIXED VERSION',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -704,14 +709,10 @@ Examples:
   # Force reprocess everything
   python %(prog)s --no-resume
 
-Output structure:
-  processed/
-    SSM/          # Surface Soil Moisture
-    RZSM/         # Root Zone Soil Moisture
-    freeze_thaw/  # Freeze/Thaw Classification
-  metadata/
-    data_catalog.csv
-    statistics_summary.json
+FIXES:
+  - Handles numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3)
+  - Uses ds.sizes instead of ds.dims
+  - Properly extracts all soil layers
         """
     )
     
@@ -728,9 +729,8 @@ Output structure:
     
     args = parser.parse_args()
     
-    # Print configuration
     print("="*70)
-    print("ESA SOIL MOISTURE PROCESSOR - PRODUCTION")
+    print("ESA SOIL MOISTURE PROCESSOR - FIXED VERSION")
     print("="*70)
     print(f"Base directory: {args.base_dir}")
     print(f"Year filter: {args.year if args.year else 'all'}")
@@ -738,24 +738,20 @@ Output structure:
     print(f"Resume mode: {not args.no_resume}")
     print("="*70)
     
-    # Initialize processor
     try:
         processor = SoilMoistureProcessor(base_dir=args.base_dir)
     except Exception as e:
         print(f"\n❌ Failed to initialize: {e}")
         return 1
     
-    # Process files
     try:
         results = processor.process_all(
             year=args.year,
             skip_if_exists=not args.no_resume
         )
         
-        # Print summary
         processor.print_summary()
         
-        # Generate catalog and stats if requested
         if args.stats:
             catalog = processor.generate_data_catalog()
             stats = processor.generate_statistics()
