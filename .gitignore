@@ -13,3 +13,5 @@ soil_moisture_download.log
 soil_moisture_monthly.log.*
 
 .cdsapirc
+
+files (5)
