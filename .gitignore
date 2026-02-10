@@ -1,0 +1,15 @@
+/__pycache__
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+data/
+
+soil_moisture_monthly/
+env/
+files/
+
+soil_moisture_download.log
+soil_moisture_monthly.log.*
+
+.cdsapirc

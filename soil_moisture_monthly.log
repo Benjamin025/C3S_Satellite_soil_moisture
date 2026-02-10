@@ -1,0 +1,618 @@
+2026-02-10 10:06:09,576 - INFO - 📁 Output directory: data/soil_moisture_monthly
+2026-02-10 10:06:10,806 - INFO - ✅ CDS API client initialized
+2026-02-10 10:06:10,809 - INFO - 
+======================================================================
+2026-02-10 10:06:10,815 - INFO - 🚀 STARTING MONTHLY SOIL MOISTURE DOWNLOAD
+2026-02-10 10:06:10,816 - INFO - ======================================================================
+2026-02-10 10:06:10,821 - INFO - Years: [2020]
+2026-02-10 10:06:10,822 - INFO - Months: All (1-12)
+2026-02-10 10:06:10,823 - INFO - Variables: 3
+2026-02-10 10:06:10,825 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:06:10,828 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:06:10,832 - INFO -   - freeze_thaw_classification
+2026-02-10 10:06:10,834 - INFO - Sensor: combined
+2026-02-10 10:06:10,836 - INFO - Record type: cdr
+2026-02-10 10:06:10,838 - INFO - Version: v202505
+2026-02-10 10:06:10,840 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:06:10,842 - INFO - Output: data/soil_moisture_monthly
+2026-02-10 10:06:10,847 - INFO - Resume: True
+2026-02-10 10:06:10,849 - INFO - ======================================================================
+2026-02-10 10:06:10,850 - INFO - 
+📊 Total to download: 12 months
+2026-02-10 10:06:10,852 - INFO - ⏱️  Estimated time: ~2.4 hours
+2026-02-10 10:06:10,853 - INFO - 
+⚠️  Press Ctrl+C to cancel
+
+2026-02-10 10:06:13,854 - INFO - 
+======================================================================
+2026-02-10 10:06:13,855 - INFO - 📅 DOWNLOADING YEAR 2020
+2026-02-10 10:06:13,855 - INFO - Months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+2026-02-10 10:06:13,856 - INFO - ======================================================================
+
+2026-02-10 10:06:13,856 - INFO - ======================================================================
+2026-02-10 10:06:13,856 - INFO - 📥 DOWNLOADING: 2020-01
+2026-02-10 10:06:13,857 - INFO - ======================================================================
+2026-02-10 10:06:13,857 - INFO - Variables: 3 variables
+2026-02-10 10:06:13,857 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:06:13,857 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:06:13,858 - INFO -   - freeze_thaw_classification
+2026-02-10 10:06:13,858 - INFO - Sensor: combined
+2026-02-10 10:06:13,858 - INFO - Time aggregation: Month average
+2026-02-10 10:06:13,858 - INFO - Record type: cdr
+2026-02-10 10:06:13,858 - INFO - Version: v202505
+2026-02-10 10:06:13,858 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:06:13,859 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_01.zip
+2026-02-10 10:06:13,859 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:06:13,859 - INFO - API Request:
+2026-02-10 10:06:13,859 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:06:13,860 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:06:13,860 - INFO -   time_aggregation: ['Month average']
+2026-02-10 10:06:13,860 - INFO -   year: ['2020']
+2026-02-10 10:06:13,860 - INFO -   month: ['01']
+2026-02-10 10:06:13,860 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:06:13,860 - INFO -   version: ['v202505']
+2026-02-10 10:06:13,861 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:06:13,861 - INFO - ======================================================================
+2026-02-10 10:06:13,861 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:06:13,862 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:06:13,862 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:06:14,334 - ERROR - ======================================================================
+2026-02-10 10:06:14,334 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:06:14,335 - ERROR - ======================================================================
+2026-02-10 10:06:14,335 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['Month average'], 'year': ['2020'], 'month': ['01'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:06:14,336 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:06:14,337 - ERROR - Common issues:
+2026-02-10 10:06:14,337 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:06:14,338 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:06:14,338 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:06:14,339 - ERROR - ======================================================================
+2026-02-10 10:06:16,342 - INFO - ======================================================================
+2026-02-10 10:06:16,343 - INFO - 📥 DOWNLOADING: 2020-02
+2026-02-10 10:06:16,343 - INFO - ======================================================================
+2026-02-10 10:06:16,344 - INFO - Variables: 3 variables
+2026-02-10 10:06:16,344 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:06:16,344 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:06:16,344 - INFO -   - freeze_thaw_classification
+2026-02-10 10:06:16,345 - INFO - Sensor: combined
+2026-02-10 10:06:16,345 - INFO - Time aggregation: Month average
+2026-02-10 10:06:16,345 - INFO - Record type: cdr
+2026-02-10 10:06:16,345 - INFO - Version: v202505
+2026-02-10 10:06:16,345 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:06:16,346 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_02.zip
+2026-02-10 10:06:16,346 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:06:16,346 - INFO - API Request:
+2026-02-10 10:06:16,346 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:06:16,346 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:06:16,347 - INFO -   time_aggregation: ['Month average']
+2026-02-10 10:06:16,347 - INFO -   year: ['2020']
+2026-02-10 10:06:16,347 - INFO -   month: ['02']
+2026-02-10 10:06:16,347 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:06:16,348 - INFO -   version: ['v202505']
+2026-02-10 10:06:16,348 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:06:16,348 - INFO - ======================================================================
+2026-02-10 10:06:16,348 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:06:16,348 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:06:16,348 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:06:16,800 - ERROR - ======================================================================
+2026-02-10 10:06:16,800 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:06:16,801 - ERROR - ======================================================================
+2026-02-10 10:06:16,801 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['Month average'], 'year': ['2020'], 'month': ['02'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:06:16,801 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:06:16,802 - ERROR - Common issues:
+2026-02-10 10:06:16,802 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:06:16,802 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:06:16,803 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:06:16,803 - ERROR - ======================================================================
+2026-02-10 10:06:18,805 - INFO - ======================================================================
+2026-02-10 10:06:18,805 - INFO - 📥 DOWNLOADING: 2020-03
+2026-02-10 10:06:18,806 - INFO - ======================================================================
+2026-02-10 10:06:18,806 - INFO - Variables: 3 variables
+2026-02-10 10:06:18,807 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:06:18,807 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:06:18,807 - INFO -   - freeze_thaw_classification
+2026-02-10 10:06:18,807 - INFO - Sensor: combined
+2026-02-10 10:06:18,808 - INFO - Time aggregation: Month average
+2026-02-10 10:06:18,808 - INFO - Record type: cdr
+2026-02-10 10:06:18,808 - INFO - Version: v202505
+2026-02-10 10:06:18,808 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:06:18,808 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_03.zip
+2026-02-10 10:06:18,809 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:06:18,809 - INFO - API Request:
+2026-02-10 10:06:18,809 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:06:18,810 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:06:18,810 - INFO -   time_aggregation: ['Month average']
+2026-02-10 10:06:18,810 - INFO -   year: ['2020']
+2026-02-10 10:06:18,811 - INFO -   month: ['03']
+2026-02-10 10:06:18,811 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:06:18,811 - INFO -   version: ['v202505']
+2026-02-10 10:06:18,812 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:06:18,812 - INFO - ======================================================================
+2026-02-10 10:06:18,813 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:06:18,813 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:06:18,813 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:06:19,249 - ERROR - ======================================================================
+2026-02-10 10:06:19,252 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:06:19,252 - ERROR - ======================================================================
+2026-02-10 10:06:19,253 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['Month average'], 'year': ['2020'], 'month': ['03'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:06:19,254 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:06:19,254 - ERROR - Common issues:
+2026-02-10 10:06:19,255 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:06:19,256 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:06:19,256 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:06:19,257 - ERROR - ======================================================================
+2026-02-10 10:06:21,259 - INFO - ======================================================================
+2026-02-10 10:06:21,259 - INFO - 📥 DOWNLOADING: 2020-04
+2026-02-10 10:06:21,260 - INFO - ======================================================================
+2026-02-10 10:06:21,260 - INFO - Variables: 3 variables
+2026-02-10 10:06:21,261 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:06:21,261 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:06:21,261 - INFO -   - freeze_thaw_classification
+2026-02-10 10:06:21,262 - INFO - Sensor: combined
+2026-02-10 10:06:21,262 - INFO - Time aggregation: Month average
+2026-02-10 10:06:21,262 - INFO - Record type: cdr
+2026-02-10 10:06:21,262 - INFO - Version: v202505
+2026-02-10 10:06:21,262 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:06:21,263 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_04.zip
+2026-02-10 10:06:21,263 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:06:21,263 - INFO - API Request:
+2026-02-10 10:06:21,263 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:06:21,264 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:06:21,264 - INFO -   time_aggregation: ['Month average']
+2026-02-10 10:06:21,264 - INFO -   year: ['2020']
+2026-02-10 10:06:21,264 - INFO -   month: ['04']
+2026-02-10 10:06:21,264 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:06:21,265 - INFO -   version: ['v202505']
+2026-02-10 10:06:21,265 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:06:21,265 - INFO - ======================================================================
+2026-02-10 10:06:21,266 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:06:21,266 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:06:21,266 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:06:21,929 - ERROR - ======================================================================
+2026-02-10 10:06:21,930 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:06:21,930 - ERROR - ======================================================================
+2026-02-10 10:06:21,930 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['Month average'], 'year': ['2020'], 'month': ['04'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:06:21,931 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:06:21,931 - ERROR - Common issues:
+2026-02-10 10:06:21,932 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:06:21,932 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:06:21,932 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:06:21,933 - ERROR - ======================================================================
+2026-02-10 10:09:45,415 - INFO - 📁 Output directory: data/soil_moisture_monthly
+2026-02-10 10:09:50,048 - INFO - ✅ CDS API client initialized
+2026-02-10 10:09:50,050 - INFO - 
+======================================================================
+2026-02-10 10:09:50,051 - INFO - 🚀 STARTING MONTHLY SOIL MOISTURE DOWNLOAD
+2026-02-10 10:09:50,052 - INFO - ======================================================================
+2026-02-10 10:09:50,052 - INFO - Years: [2020]
+2026-02-10 10:09:50,053 - INFO - Months: All (1-12)
+2026-02-10 10:09:50,053 - INFO - Variables: 3
+2026-02-10 10:09:50,054 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:09:50,054 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:09:50,055 - INFO -   - freeze_thaw_classification
+2026-02-10 10:09:50,055 - INFO - Sensor: combined
+2026-02-10 10:09:50,056 - INFO - Record type: cdr
+2026-02-10 10:09:50,056 - INFO - Version: v202505
+2026-02-10 10:09:50,057 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:09:50,057 - INFO - Output: data/soil_moisture_monthly
+2026-02-10 10:09:50,058 - INFO - Resume: True
+2026-02-10 10:09:50,058 - INFO - ======================================================================
+2026-02-10 10:09:50,059 - INFO - 
+📊 Total to download: 12 months
+2026-02-10 10:09:50,059 - INFO - ⏱️  Estimated time: ~2.4 hours
+2026-02-10 10:09:50,060 - INFO - 
+⚠️  Press Ctrl+C to cancel
+
+2026-02-10 10:09:53,060 - INFO - 
+======================================================================
+2026-02-10 10:09:53,061 - INFO - 📅 DOWNLOADING YEAR 2020
+2026-02-10 10:09:53,061 - INFO - Months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+2026-02-10 10:09:53,062 - INFO - ======================================================================
+
+2026-02-10 10:09:53,063 - INFO - ======================================================================
+2026-02-10 10:09:53,063 - INFO - 📥 DOWNLOADING: 2020-01
+2026-02-10 10:09:53,063 - INFO - ======================================================================
+2026-02-10 10:09:53,064 - INFO - Variables: 3 variables
+2026-02-10 10:09:53,064 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:09:53,064 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:09:53,065 - INFO -   - freeze_thaw_classification
+2026-02-10 10:09:53,065 - INFO - Sensor: combined
+2026-02-10 10:09:53,065 - INFO - Time aggregation: Month average
+2026-02-10 10:09:53,065 - INFO - Record type: cdr
+2026-02-10 10:09:53,066 - INFO - Version: v202505
+2026-02-10 10:09:53,066 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:09:53,066 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_01.zip
+2026-02-10 10:09:53,066 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:09:53,067 - INFO - API Request:
+2026-02-10 10:09:53,067 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:09:53,067 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:09:53,068 - INFO -   time_aggregation: ['Month_average']
+2026-02-10 10:09:53,068 - INFO -   year: ['2020']
+2026-02-10 10:09:53,068 - INFO -   month: ['01']
+2026-02-10 10:09:53,069 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:09:53,069 - INFO -   version: ['v202505']
+2026-02-10 10:09:53,069 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:09:53,070 - INFO - ======================================================================
+2026-02-10 10:09:53,070 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:09:53,070 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:09:53,071 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:09:53,507 - ERROR - ======================================================================
+2026-02-10 10:09:53,507 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:09:53,508 - ERROR - ======================================================================
+2026-02-10 10:09:53,508 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['Month_average'], 'year': ['2020'], 'month': ['01'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:09:53,509 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:09:53,509 - ERROR - Common issues:
+2026-02-10 10:09:53,509 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:09:53,510 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:09:53,510 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:09:53,510 - ERROR - ======================================================================
+2026-02-10 10:09:55,513 - INFO - ======================================================================
+2026-02-10 10:09:55,514 - INFO - 📥 DOWNLOADING: 2020-02
+2026-02-10 10:09:55,514 - INFO - ======================================================================
+2026-02-10 10:09:55,515 - INFO - Variables: 3 variables
+2026-02-10 10:09:55,515 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:09:55,515 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:09:55,516 - INFO -   - freeze_thaw_classification
+2026-02-10 10:09:55,516 - INFO - Sensor: combined
+2026-02-10 10:09:55,516 - INFO - Time aggregation: Month average
+2026-02-10 10:09:55,517 - INFO - Record type: cdr
+2026-02-10 10:09:55,517 - INFO - Version: v202505
+2026-02-10 10:09:55,518 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:09:55,518 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_02.zip
+2026-02-10 10:09:55,518 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:09:55,519 - INFO - API Request:
+2026-02-10 10:09:55,519 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:09:55,519 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:09:55,520 - INFO -   time_aggregation: ['Month_average']
+2026-02-10 10:09:55,520 - INFO -   year: ['2020']
+2026-02-10 10:09:55,521 - INFO -   month: ['02']
+2026-02-10 10:09:55,521 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:09:55,521 - INFO -   version: ['v202505']
+2026-02-10 10:09:55,522 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:09:55,522 - INFO - ======================================================================
+2026-02-10 10:09:55,523 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:09:55,523 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:09:55,523 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:09:55,881 - ERROR - ======================================================================
+2026-02-10 10:09:55,883 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:09:55,885 - ERROR - ======================================================================
+2026-02-10 10:09:55,886 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['Month_average'], 'year': ['2020'], 'month': ['02'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:09:55,890 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:09:55,891 - ERROR - Common issues:
+2026-02-10 10:09:55,894 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:09:55,896 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:09:55,898 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:09:55,899 - ERROR - ======================================================================
+2026-02-10 10:09:57,906 - INFO - ======================================================================
+2026-02-10 10:09:57,907 - INFO - 📥 DOWNLOADING: 2020-03
+2026-02-10 10:09:57,907 - INFO - ======================================================================
+2026-02-10 10:09:57,908 - INFO - Variables: 3 variables
+2026-02-10 10:09:57,908 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:09:57,908 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:09:57,909 - INFO -   - freeze_thaw_classification
+2026-02-10 10:09:57,909 - INFO - Sensor: combined
+2026-02-10 10:09:57,909 - INFO - Time aggregation: Month average
+2026-02-10 10:09:57,910 - INFO - Record type: cdr
+2026-02-10 10:09:57,910 - INFO - Version: v202505
+2026-02-10 10:09:57,910 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:09:57,911 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_03.zip
+2026-02-10 10:09:57,911 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:09:57,911 - INFO - API Request:
+2026-02-10 10:09:57,911 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:09:57,912 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:09:57,912 - INFO -   time_aggregation: ['Month_average']
+2026-02-10 10:09:57,912 - INFO -   year: ['2020']
+2026-02-10 10:09:57,913 - INFO -   month: ['03']
+2026-02-10 10:09:57,913 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:09:57,913 - INFO -   version: ['v202505']
+2026-02-10 10:09:57,914 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:09:57,914 - INFO - ======================================================================
+2026-02-10 10:09:57,915 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:09:57,915 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:09:57,915 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:10:30,520 - INFO - 📁 Output directory: data/soil_moisture_monthly
+2026-02-10 10:10:31,606 - INFO - ✅ CDS API client initialized
+2026-02-10 10:10:31,607 - INFO - 
+======================================================================
+2026-02-10 10:10:31,607 - INFO - 🚀 STARTING MONTHLY SOIL MOISTURE DOWNLOAD
+2026-02-10 10:10:31,608 - INFO - ======================================================================
+2026-02-10 10:10:31,608 - INFO - Years: [2020]
+2026-02-10 10:10:31,608 - INFO - Months: All (1-12)
+2026-02-10 10:10:31,609 - INFO - Variables: 3
+2026-02-10 10:10:31,609 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:10:31,609 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:10:31,610 - INFO -   - freeze_thaw_classification
+2026-02-10 10:10:31,610 - INFO - Sensor: combined
+2026-02-10 10:10:31,610 - INFO - Record type: cdr
+2026-02-10 10:10:31,611 - INFO - Version: v202505
+2026-02-10 10:10:31,611 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:10:31,612 - INFO - Output: data/soil_moisture_monthly
+2026-02-10 10:10:31,612 - INFO - Resume: True
+2026-02-10 10:10:31,612 - INFO - ======================================================================
+2026-02-10 10:10:31,613 - INFO - 
+📊 Total to download: 12 months
+2026-02-10 10:10:31,613 - INFO - ⏱️  Estimated time: ~2.4 hours
+2026-02-10 10:10:31,614 - INFO - 
+⚠️  Press Ctrl+C to cancel
+
+2026-02-10 10:10:34,614 - INFO - 
+======================================================================
+2026-02-10 10:10:34,615 - INFO - 📅 DOWNLOADING YEAR 2020
+2026-02-10 10:10:34,615 - INFO - Months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+2026-02-10 10:10:34,616 - INFO - ======================================================================
+
+2026-02-10 10:10:34,616 - INFO - ======================================================================
+2026-02-10 10:10:34,616 - INFO - 📥 DOWNLOADING: 2020-01
+2026-02-10 10:10:34,617 - INFO - ======================================================================
+2026-02-10 10:10:34,617 - INFO - Variables: 3 variables
+2026-02-10 10:10:34,617 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:10:34,618 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:10:34,618 - INFO -   - freeze_thaw_classification
+2026-02-10 10:10:34,618 - INFO - Sensor: combined
+2026-02-10 10:10:34,618 - INFO - Time aggregation: Month average
+2026-02-10 10:10:34,619 - INFO - Record type: cdr
+2026-02-10 10:10:34,619 - INFO - Version: v202505
+2026-02-10 10:10:34,619 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:10:34,620 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_01.zip
+2026-02-10 10:10:34,620 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:10:34,620 - INFO - API Request:
+2026-02-10 10:10:34,621 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:10:34,621 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:10:34,622 - INFO -   time_aggregation: ['month_average']
+2026-02-10 10:10:34,622 - INFO -   year: ['2020']
+2026-02-10 10:10:34,622 - INFO -   month: ['01']
+2026-02-10 10:10:34,623 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:10:34,623 - INFO -   version: ['v202505']
+2026-02-10 10:10:34,623 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:10:34,624 - INFO - ======================================================================
+2026-02-10 10:10:34,624 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:10:34,624 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:10:34,625 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:10:35,005 - ERROR - ======================================================================
+2026-02-10 10:10:35,008 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:10:35,009 - ERROR - ======================================================================
+2026-02-10 10:10:35,010 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['month_average'], 'year': ['2020'], 'month': ['01'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:10:35,011 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:10:35,011 - ERROR - Common issues:
+2026-02-10 10:10:35,012 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:10:35,012 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:10:35,012 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:10:35,013 - ERROR - ======================================================================
+2026-02-10 10:10:37,016 - INFO - ======================================================================
+2026-02-10 10:10:37,017 - INFO - 📥 DOWNLOADING: 2020-02
+2026-02-10 10:10:37,017 - INFO - ======================================================================
+2026-02-10 10:10:37,018 - INFO - Variables: 3 variables
+2026-02-10 10:10:37,018 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:10:37,018 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:10:37,019 - INFO -   - freeze_thaw_classification
+2026-02-10 10:10:37,019 - INFO - Sensor: combined
+2026-02-10 10:10:37,019 - INFO - Time aggregation: Month average
+2026-02-10 10:10:37,019 - INFO - Record type: cdr
+2026-02-10 10:10:37,019 - INFO - Version: v202505
+2026-02-10 10:10:37,020 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:10:37,020 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_02.zip
+2026-02-10 10:10:37,020 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:10:37,020 - INFO - API Request:
+2026-02-10 10:10:37,021 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:10:37,021 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:10:37,021 - INFO -   time_aggregation: ['month_average']
+2026-02-10 10:10:37,021 - INFO -   year: ['2020']
+2026-02-10 10:10:37,021 - INFO -   month: ['02']
+2026-02-10 10:10:37,022 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:10:37,022 - INFO -   version: ['v202505']
+2026-02-10 10:10:37,022 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:10:37,022 - INFO - ======================================================================
+2026-02-10 10:10:37,023 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:10:37,023 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:10:37,024 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:10:37,674 - ERROR - ======================================================================
+2026-02-10 10:10:37,675 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:10:37,675 - ERROR - ======================================================================
+2026-02-10 10:10:37,675 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['month_average'], 'year': ['2020'], 'month': ['02'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:10:37,676 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:10:37,676 - ERROR - Common issues:
+2026-02-10 10:10:37,676 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:10:37,677 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:10:37,677 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:10:37,677 - ERROR - ======================================================================
+2026-02-10 10:36:34,928 - INFO - 📁 Output directory: data/soil_moisture_monthly
+2026-02-10 10:36:39,556 - INFO - ✅ CDS API client initialized
+2026-02-10 10:36:39,556 - INFO - 
+======================================================================
+2026-02-10 10:36:39,557 - INFO - 🚀 STARTING MONTHLY SOIL MOISTURE DOWNLOAD
+2026-02-10 10:36:39,557 - INFO - ======================================================================
+2026-02-10 10:36:39,558 - INFO - Years: [2020, 2021, 2022, 2023, 2024]
+2026-02-10 10:36:39,558 - INFO - Months: All (1-12)
+2026-02-10 10:36:39,559 - INFO - Variables: 3
+2026-02-10 10:36:39,559 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:36:39,559 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:36:39,560 - INFO -   - freeze_thaw_classification
+2026-02-10 10:36:39,560 - INFO - Sensor: combined
+2026-02-10 10:36:39,560 - INFO - Record type: cdr
+2026-02-10 10:36:39,561 - INFO - Version: v202505
+2026-02-10 10:36:39,561 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:36:39,561 - INFO - Output: data/soil_moisture_monthly
+2026-02-10 10:36:39,562 - INFO - Resume: True
+2026-02-10 10:36:39,562 - INFO - ======================================================================
+2026-02-10 10:36:39,562 - INFO - 
+📊 Total to download: 60 months
+2026-02-10 10:36:39,563 - INFO - ⏱️  Estimated time: ~12.0 hours
+2026-02-10 10:36:39,563 - INFO - 
+⚠️  Press Ctrl+C to cancel
+
+2026-02-10 10:36:42,564 - INFO - 
+======================================================================
+2026-02-10 10:36:42,564 - INFO - 📅 DOWNLOADING YEAR 2020
+2026-02-10 10:36:42,565 - INFO - Months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+2026-02-10 10:36:42,565 - INFO - ======================================================================
+
+2026-02-10 10:36:42,566 - INFO - ======================================================================
+2026-02-10 10:36:42,567 - INFO - 📥 DOWNLOADING: 2020-01
+2026-02-10 10:36:42,567 - INFO - ======================================================================
+2026-02-10 10:36:42,567 - INFO - Variables: 3 variables
+2026-02-10 10:36:42,568 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:36:42,568 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:36:42,568 - INFO -   - freeze_thaw_classification
+2026-02-10 10:36:42,569 - INFO - Sensor: combined
+2026-02-10 10:36:42,569 - INFO - Time aggregation: Month average
+2026-02-10 10:36:42,569 - INFO - Record type: cdr
+2026-02-10 10:36:42,570 - INFO - Version: v202505
+2026-02-10 10:36:42,570 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:36:42,571 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_01.zip
+2026-02-10 10:36:42,571 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:36:42,571 - INFO - API Request:
+2026-02-10 10:36:42,572 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:36:42,572 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:36:42,573 - INFO -   time_aggregation: ['month_average']
+2026-02-10 10:36:42,573 - INFO -   year: ['2020']
+2026-02-10 10:36:42,573 - INFO -   month: ['01']
+2026-02-10 10:36:42,574 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:36:42,574 - INFO -   version: ['v202505']
+2026-02-10 10:36:42,574 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:36:42,575 - INFO - ======================================================================
+2026-02-10 10:36:42,575 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:36:42,575 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:36:42,576 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:36:42,950 - ERROR - ======================================================================
+2026-02-10 10:36:42,952 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:36:42,955 - ERROR - ======================================================================
+2026-02-10 10:36:42,957 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['month_average'], 'year': ['2020'], 'month': ['01'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:36:42,960 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:36:42,961 - ERROR - Common issues:
+2026-02-10 10:36:42,962 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:36:42,962 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:36:42,963 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:36:42,963 - ERROR - ======================================================================
+2026-02-10 10:36:44,972 - INFO - ======================================================================
+2026-02-10 10:36:44,973 - INFO - 📥 DOWNLOADING: 2020-02
+2026-02-10 10:36:44,973 - INFO - ======================================================================
+2026-02-10 10:36:44,974 - INFO - Variables: 3 variables
+2026-02-10 10:36:44,974 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:36:44,974 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:36:44,975 - INFO -   - freeze_thaw_classification
+2026-02-10 10:36:44,975 - INFO - Sensor: combined
+2026-02-10 10:36:44,975 - INFO - Time aggregation: Month average
+2026-02-10 10:36:44,976 - INFO - Record type: cdr
+2026-02-10 10:36:44,976 - INFO - Version: v202505
+2026-02-10 10:36:44,977 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:36:44,977 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_02.zip
+2026-02-10 10:36:44,977 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:36:44,978 - INFO - API Request:
+2026-02-10 10:36:44,978 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:36:44,978 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:36:44,979 - INFO -   time_aggregation: ['month_average']
+2026-02-10 10:36:44,979 - INFO -   year: ['2020']
+2026-02-10 10:36:44,980 - INFO -   month: ['02']
+2026-02-10 10:36:44,980 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:36:44,981 - INFO -   version: ['v202505']
+2026-02-10 10:36:44,981 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:36:44,981 - INFO - ======================================================================
+2026-02-10 10:36:44,982 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:36:44,982 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:36:44,982 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:36:45,352 - ERROR - ======================================================================
+2026-02-10 10:36:45,352 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:36:45,353 - ERROR - ======================================================================
+2026-02-10 10:36:45,354 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['month_average'], 'year': ['2020'], 'month': ['02'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:36:45,354 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:36:45,355 - ERROR - Common issues:
+2026-02-10 10:36:45,355 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:36:45,356 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:36:45,357 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:36:45,357 - ERROR - ======================================================================
+2026-02-10 10:36:47,360 - INFO - ======================================================================
+2026-02-10 10:36:47,361 - INFO - 📥 DOWNLOADING: 2020-03
+2026-02-10 10:36:47,361 - INFO - ======================================================================
+2026-02-10 10:36:47,362 - INFO - Variables: 3 variables
+2026-02-10 10:36:47,362 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:36:47,363 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:36:47,363 - INFO -   - freeze_thaw_classification
+2026-02-10 10:36:47,363 - INFO - Sensor: combined
+2026-02-10 10:36:47,364 - INFO - Time aggregation: Month average
+2026-02-10 10:36:47,364 - INFO - Record type: cdr
+2026-02-10 10:36:47,365 - INFO - Version: v202505
+2026-02-10 10:36:47,365 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:36:47,366 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_03.zip
+2026-02-10 10:36:47,366 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:36:47,366 - INFO - API Request:
+2026-02-10 10:36:47,367 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:36:47,367 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:36:47,368 - INFO -   time_aggregation: ['month_average']
+2026-02-10 10:36:47,368 - INFO -   year: ['2020']
+2026-02-10 10:36:47,368 - INFO -   month: ['03']
+2026-02-10 10:36:47,369 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:36:47,369 - INFO -   version: ['v202505']
+2026-02-10 10:36:47,370 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:36:47,370 - INFO - ======================================================================
+2026-02-10 10:36:47,371 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:36:47,371 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:36:47,371 - INFO -    Check status: https://cds.climate.copernicus.eu/live
+2026-02-10 10:36:47,745 - ERROR - ======================================================================
+2026-02-10 10:36:47,747 - ERROR - ❌ DOWNLOAD FAILED!
+2026-02-10 10:36:47,749 - ERROR - ======================================================================
+2026-02-10 10:36:47,749 - ERROR - Error: 400 Client Error: Bad Request for url: https://cds.climate.copernicus.eu/api/retrieve/v1/processes/satellite-soil-moisture/execution
+invalid request
+Request has not produced a valid combination of values, please check your selection.
+{'variable': ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification'], 'type_of_sensor': ['combined'], 'time_aggregation': ['month_average'], 'year': ['2020'], 'month': ['03'], 'type_of_record': ['cdr'], 'version': ['v202505']}
+2026-02-10 10:36:47,750 - ERROR - ----------------------------------------------------------------------
+2026-02-10 10:36:47,751 - ERROR - Common issues:
+2026-02-10 10:36:47,752 - ERROR - 1. Terms not accepted at CDS website
+2026-02-10 10:36:47,752 - ERROR - 2. Invalid API key in ~/.cdsapirc
+2026-02-10 10:36:47,753 - ERROR - 3. CDS queue is full - try again later
+2026-02-10 10:36:47,754 - ERROR - ======================================================================
+2026-02-10 10:36:49,757 - INFO - ======================================================================
+2026-02-10 10:36:49,758 - INFO - 📥 DOWNLOADING: 2020-04
+2026-02-10 10:36:49,758 - INFO - ======================================================================
+2026-02-10 10:36:49,759 - INFO - Variables: 3 variables
+2026-02-10 10:36:49,759 - INFO -   - surface_soil_moisture_volumetric
+2026-02-10 10:36:49,759 - INFO -   - root_zone_soil_moisture_volumetric
+2026-02-10 10:36:49,759 - INFO -   - freeze_thaw_classification
+2026-02-10 10:36:49,760 - INFO - Sensor: combined
+2026-02-10 10:36:49,760 - INFO - Time aggregation: Month average
+2026-02-10 10:36:49,760 - INFO - Record type: cdr
+2026-02-10 10:36:49,760 - INFO - Version: v202505
+2026-02-10 10:36:49,760 - INFO - Area: [40, -20, -40, 55]
+2026-02-10 10:36:49,761 - INFO - Output: data/soil_moisture_monthly/raw/2020/soil_moisture_monthly_2020_04.zip
+2026-02-10 10:36:49,761 - INFO - ----------------------------------------------------------------------
+2026-02-10 10:36:49,761 - INFO - API Request:
+2026-02-10 10:36:49,762 - INFO -   variable: ['surface_soil_moisture_volumetric', 'root_zone_soil_moisture_volumetric', 'freeze_thaw_classification']
+2026-02-10 10:36:49,762 - INFO -   type_of_sensor: ['combined']
+2026-02-10 10:36:49,762 - INFO -   time_aggregation: ['month_average']
+2026-02-10 10:36:49,762 - INFO -   year: ['2020']
+2026-02-10 10:36:49,762 - INFO -   month: ['04']
+2026-02-10 10:36:49,763 - INFO -   type_of_record: ['cdr']
+2026-02-10 10:36:49,763 - INFO -   version: ['v202505']
+2026-02-10 10:36:49,763 - INFO -   area: [40, -20, -40, 55]
+2026-02-10 10:36:49,763 - INFO - ======================================================================
+2026-02-10 10:36:49,763 - INFO - ⏳ Submitting to CDS queue...
+2026-02-10 10:36:49,764 - INFO -    Monthly data typically takes 5-15 minutes
+2026-02-10 10:36:49,764 - INFO -    Check status: https://cds.climate.copernicus.eu/live
