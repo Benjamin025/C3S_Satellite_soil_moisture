@@ -7,7 +7,7 @@ data/
 
 soil_moisture_monthly/
 env/
-files/
+files(5)/
 
 soil_moisture_download.log
 soil_moisture_monthly.log.*
