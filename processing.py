@@ -113,11 +113,12 @@ class SoilMoistureProcessor:
     - Generates metadata and statistics
     """
     
-    # Variable mapping (internal name → NetCDF variable name)
+    # Variable mapping (internal name → possible NetCDF variable names)
+    # Each variable type can have multiple possible names in source files
     VARIABLE_MAPPING = {
-        'SSM': 'sm',           # Surface soil moisture
-        'RZSM': 'rzsm',        # Root zone soil moisture  
-        'freeze_thaw': 'flag'  # Freeze/thaw classification
+        'SSM': ['sm'],                    # Surface soil moisture
+        'RZSM': ['rzsm'],                 # Root zone soil moisture  
+        'freeze_thaw': ['ft', 'flag']     # Freeze/thaw classification (can be 'ft' or 'flag')
     }
     
     # Full variable names for documentation
@@ -125,6 +126,14 @@ class SoilMoistureProcessor:
         'SSM': 'surface_soil_moisture_volumetric',
         'RZSM': 'root_zone_soil_moisture_volumetric',
         'freeze_thaw': 'freeze_thaw_classification'
+    }
+    
+    # File patterns to identify variable types
+    # Some variables come in separate NetCDF files within the ZIP
+    FILE_PATTERNS = {
+        'SSM': ['SSMV', 'SSM'],           # Surface soil moisture files
+        'RZSM': ['RZSM'],                 # Root zone files
+        'freeze_thaw': ['FT', 'FREEZE']   # Freeze/thaw files
     }
     
     def __init__(self, base_dir="./data/soil_moisture"):
@@ -390,6 +399,11 @@ class SoilMoistureProcessor:
                     logger.info(f"  ✓ Extracted: {nc_file}")
             
             # Process each NetCDF file
+            # NOTE: ZIP files may contain multiple NetCDF files, each with different variables:
+            # - SSM files: contain 'sm' variable (surface soil moisture)
+            # - RZSM files: contain 'rzsm' variable (root zone soil moisture)  
+            # - FT files: contain 'ft' or 'flag' variable (freeze/thaw classification)
+            # We process all NetCDF files and extract the relevant variables from each
             for nc_file in nc_files:
                 nc_path = temp_dir / nc_file
                 
@@ -403,8 +417,15 @@ class SoilMoistureProcessor:
                     logger.info(f"Dimensions: {dict(ds.dims)}")
                     
                     # Extract each variable type
-                    for var_type, nc_var in self.VARIABLE_MAPPING.items():
-                        if nc_var in ds.data_vars:
+                    for var_type, possible_var_names in self.VARIABLE_MAPPING.items():
+                        # Find which variable name exists in this file
+                        nc_var = None
+                        for possible_name in possible_var_names:
+                            if possible_name in ds.data_vars:
+                                nc_var = possible_name
+                                break
+                        
+                        if nc_var:
                             logger.info(f"  ✓ Found {var_type} ({nc_var})")
                             
                             # Extract this variable
@@ -443,7 +464,9 @@ class SoilMoistureProcessor:
                             results['output_files'].append(str(output_path))
                             self.stats['variables_extracted'][var_type] += 1
                         else:
-                            logger.info(f"  ⚠️  {var_type} ({nc_var}) not found in file")
+                            # Show which variable names were searched for
+                            searched_names = ', '.join(possible_var_names)
+                            logger.info(f"  ⚠️  {var_type} (searched: {searched_names}) not found in file")
                     
                     ds.close()
                     
@@ -543,10 +566,15 @@ class SoilMoistureProcessor:
                     # Open file
                     ds = xr.open_dataset(nc_file)
                     
-                    # Get variable name
-                    nc_var = self.VARIABLE_MAPPING[var_type]
+                    # Find which variable name exists in this file
+                    nc_var = None
+                    possible_var_names = self.VARIABLE_MAPPING[var_type]
+                    for possible_name in possible_var_names:
+                        if possible_name in ds.data_vars:
+                            nc_var = possible_name
+                            break
                     
-                    if nc_var in ds.data_vars:
+                    if nc_var and nc_var in ds.data_vars:
                         var_data = ds[nc_var]
                         
                         # Extract metadata
