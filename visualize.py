@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
 """
-SOIL MOISTURE VISUALIZATION AND TREND ANALYSIS
-==============================================
-Visualizes and analyzes SSM, RZSM, and Freeze/Thaw data over Africa.
+SOIL MOISTURE VISUALIZATION - MONTHLY DATA
+===========================================
+Visualizes and analyzes SSM and RZSM monthly averaged data over Africa.
+
+NOTE: Monthly data does NOT include Freeze/Thaw classification.
+      This is only available in daily data products.
 
 Features:
-- Time series analysis for all three variables
-- Spatial maps showing average conditions
+- Time series analysis for SSM and RZSM
+- Spatial maps showing average conditions  
 - Seasonal trends and patterns
 - Monthly comparisons
 - Statistical summaries
-- Interactive and static plots
+- All RZSM layers (rzsm_1, rzsm_2, rzsm_3, rzsm_1m)
 
 Usage:
-    python visualize_soil_moisture.py
-    python visualize_soil_moisture.py --year 2020
-    python visualize_soil_moisture.py --variable SSM
-    python visualize_soil_moisture.py --output-dir ./plots
+    python visualize_soil_moisture_monthly.py
+    python visualize_soil_moisture_monthly.py --year 2024
+    python visualize_soil_moisture_monthly.py --variable SSM
+    python visualize_soil_moisture_monthly.py --output-dir ./plots
 
 Author: Production Ready
 Date: February 2026
@@ -56,14 +59,15 @@ class SoilMoistureVisualizer:
     Comprehensive visualization tool for soil moisture data
     """
     
-    def __init__(self, base_dir="./data/soil_moisture", output_dir="./plots"):
+    def __init__(self, base_dir="/home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly", output_dir="./plots"):
         """
         Initialize visualizer
         
         Parameters:
         -----------
         base_dir : str
-            Base directory containing processed/ subdirectory
+            Base directory containing processed/ subdirectory  
+            Default: Monthly data directory
         output_dir : str
             Directory to save plots
         """
@@ -73,17 +77,17 @@ class SoilMoistureVisualizer:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
         print("="*70)
-        print("SOIL MOISTURE VISUALIZER - INITIALIZED")
+        print("SOIL MOISTURE VISUALIZER - MONTHLY DATA")
         print("="*70)
         print(f"Data directory: {self.processed_dir}")
         print(f"Output directory: {self.output_dir}")
+        print("⚠️  Note: Monthly data does NOT include Freeze/Thaw")
         print("="*70)
         
-        # Data containers
+        # Data containers (no freeze_thaw in monthly data)
         self.data = {
             'SSM': None,
             'RZSM': None,
-            'freeze_thaw': None
         }
         
         # Metadata
@@ -97,7 +101,7 @@ class SoilMoistureVisualizer:
         Parameters:
         -----------
         variable : str
-            'SSM', 'RZSM', or 'freeze_thaw'
+            'SSM' or 'RZSM' (freeze_thaw not available in monthly data)
         year : int, optional
             Load only specific year
         
@@ -153,16 +157,16 @@ class SoilMoistureVisualizer:
             return None
     
     def load_all_variables(self, year=None):
-        """Load all three variables"""
+        """Load SSM and RZSM (no freeze_thaw in monthly data)"""
         print("\n" + "="*70)
-        print("LOADING ALL VARIABLES")
+        print("LOADING VARIABLES")
         print("="*70)
         
-        for var in ['SSM', 'RZSM', 'freeze_thaw']:
+        for var in ['SSM', 'RZSM']:
             self.load_data(var, year)
         
         # Get spatial extent from any loaded data
-        for var in ['SSM', 'RZSM', 'freeze_thaw']:
+        for var in ['SSM', 'RZSM']:
             if self.data[var] is not None:
                 ds = self.data[var]
                 self.spatial_extent = {
@@ -529,16 +533,16 @@ class SoilMoistureVisualizer:
     
     def plot_seasonal_trends(self, save=True):
         """
-        Compare all three variables in seasonal trends
+        Compare SSM and RZSM seasonal trends
         """
         print(f"\n🌍 Creating seasonal trends comparison...")
         
-        # Check which data is available
-        available_vars = [v for v in ['SSM', 'RZSM', 'freeze_thaw'] 
+        # Check which data is available (no freeze_thaw in monthly data)
+        available_vars = [v for v in ['SSM', 'RZSM'] 
                          if self.data[v] is not None]
         
-        if len(available_vars) < 2:
-            print("⚠️  Need at least 2 variables loaded")
+        if len(available_vars) < 1:
+            print("⚠️  Need at least 1 variable loaded")
             return
         
         fig, axes = plt.subplots(len(available_vars), 1, figsize=(14, 5*len(available_vars)))
@@ -553,10 +557,8 @@ class SoilMoistureVisualizer:
             if var == 'SSM':
                 var_name = 'sm'
             elif var == 'RZSM':
-                var_names = [v for v in ds.data_vars if v.startswith('rzsm') and v != 'rzsm']
+                var_names = [v for v in ds.data_vars if v.startswith('rzsm') and v != 'rzsm' and 'crs' not in v]
                 var_name = var_names[0] if var_names else 'rzsm'
-            else:
-                var_name = 'flag' if 'flag' in ds.data_vars else 'ft'
             
             # Calculate spatial mean
             mean_vals = ds[var_name].mean(dim=['lat', 'lon']).values
@@ -586,11 +588,7 @@ class SoilMoistureVisualizer:
             ax.set_xticks(x)
             ax.set_xticklabels(months)
             ax.set_xlabel('Month', fontsize=12, fontweight='bold')
-            
-            if var == 'freeze_thaw':
-                ax.set_ylabel('Freeze/Thaw Index', fontsize=12, fontweight='bold')
-            else:
-                ax.set_ylabel('Soil Moisture (m³/m³)', fontsize=12, fontweight='bold')
+            ax.set_ylabel('Soil Moisture (m³/m³)', fontsize=12, fontweight='bold')
             
             ax.set_title(f"{var} - Seasonal Pattern (All Years)", 
                         fontsize=13, fontweight='bold')
@@ -615,7 +613,7 @@ class SoilMoistureVisualizer:
         
         stats = {}
         
-        for var in ['SSM', 'RZSM', 'freeze_thaw']:
+        for var in ['SSM', 'RZSM']:  # No freeze_thaw in monthly data
             if self.data[var] is None:
                 continue
             
@@ -625,11 +623,10 @@ class SoilMoistureVisualizer:
             if var == 'SSM':
                 var_names = ['sm']
             elif var == 'RZSM':
-                var_names = [v for v in ds.data_vars if v.startswith('rzsm') and v != 'rzsm']
+                # Include all RZSM layers: rzsm_1, rzsm_2, rzsm_3, rzsm_1m
+                var_names = [v for v in ds.data_vars if v.startswith('rzsm') and v != 'rzsm' and 'crs' not in v]
                 if not var_names:
                     var_names = ['rzsm'] if 'rzsm' in ds.data_vars else []
-            else:
-                var_names = ['flag'] if 'flag' in ds.data_vars else ['ft']
             
             stats[var] = {}
             
@@ -709,17 +706,17 @@ Examples:
     )
     
     parser.add_argument('--base-dir', type=str, 
-                       default='./data/soil_moisture',
-                       help='Base directory (default: ./data/soil_moisture)')
+                       default='/home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly',
+                       help='Base directory (default: monthly data path)')
     parser.add_argument('--output-dir', type=str,
                        default='./plots',
                        help='Output directory for plots (default: ./plots)')
     parser.add_argument('--year', type=int, default=None,
                        help='Analyze specific year')
     parser.add_argument('--variable', type=str, 
-                       choices=['SSM', 'RZSM', 'freeze_thaw', 'all'],
+                       choices=['SSM', 'RZSM', 'all'],
                        default='all',
-                       help='Specific variable to analyze')
+                       help='Specific variable to analyze (no freeze_thaw in monthly data)')
     parser.add_argument('--plots', type=str,
                        choices=['timeseries', 'spatial', 'monthly', 'seasonal', 'all'],
                        default='all',
@@ -728,13 +725,14 @@ Examples:
     args = parser.parse_args()
     
     print("\n" + "="*70)
-    print("SOIL MOISTURE VISUALIZATION")
+    print("SOIL MOISTURE VISUALIZATION - MONTHLY DATA")
     print("="*70)
     print(f"Data directory: {args.base_dir}")
     print(f"Output directory: {args.output_dir}")
     print(f"Year filter: {args.year if args.year else 'all'}")
     print(f"Variables: {args.variable}")
     print(f"Plot types: {args.plots}")
+    print("⚠️  Note: Monthly data does NOT include Freeze/Thaw")
     print("="*70)
     
     # Initialize visualizer
@@ -746,7 +744,7 @@ Examples:
     # Load data
     if args.variable == 'all':
         viz.load_all_variables(year=args.year)
-        variables = ['SSM', 'RZSM', 'freeze_thaw']
+        variables = ['SSM', 'RZSM']  # No freeze_thaw in monthly data
     else:
         viz.load_data(args.variable, year=args.year)
         variables = [args.variable]
@@ -756,7 +754,7 @@ Examples:
     print("GENERATING VISUALIZATIONS")
     print("="*70)
     
-    plot_year = args.year if args.year else 2020
+    plot_year = args.year if args.year else 2024  # Default to 2024 for monthly data
     
     for var in variables:
         if viz.data[var] is None:
