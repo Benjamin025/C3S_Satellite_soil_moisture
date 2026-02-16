@@ -28,3 +28,10 @@ files/
 files 
 
 plots
+
+soil_moisture_monthly.log
+soil_moisture_download.log
+soil_moisture_processing.log
+/soil_moisture_download.log
+/soil_moisture_processing.log
+/soil_moisture_monthly.log

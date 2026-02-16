@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
-ESA SOIL MOISTURE DOWNLOADER - MONTHLY AVERAGES
-================================================
+ESA SOIL MOISTURE DOWNLOADER - MONTHLY AVERAGES (FIXED)
+========================================================
 Downloads monthly average soil moisture data for pre-configured years.
+
+FIXED: Added required 'day' parameter for monthly average requests
 
 Variables downloaded:
 - Surface Soil Moisture (SSM) - Volumetric
@@ -21,7 +23,7 @@ Requirements:
 pip install cdsapi
 
 Usage:
-python soil_moisture_monthly.py
+python soil_moisture_monthly_fixed.py
 
 Author: Production Ready
 Date: February 2026
@@ -47,7 +49,12 @@ except ImportError:
 # ============================================================================
 
 # Years to download (edit this list)
-DOWNLOAD_YEARS = [2020, 2021, 2022, 2023, 2024]
+# DOWNLOAD_YEARS = [1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 
+# 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+# 1999, 2000, 2001,2002, 2003, 2004,2005, 2006, 2007,2008, 2009, 2010,2011, 
+# 2012, 2013,2014, 2015,2016, 2017, 2018, 2019,2020, 2021, 2022,2023, 2024,2025],
+
+DOWNLOAD_YEARS = [2024]
 
 # Months to download (1-12, or None for all months)
 DOWNLOAD_MONTHS = None  # None = all months, or [1, 2, 3, 6, 7, 8] for specific months
@@ -190,6 +197,7 @@ class MonthlyDownloader:
             'time_aggregation': ['month_average'],  # EXACT value - lowercase with underscore!
             'year': [str(year)],
             'month': [month_str],
+            'day': ['01'],  # REQUIRED for monthly averages (always set to '01')
             'type_of_record': [RECORD_TYPE],
             'version': [VERSION],
         }
@@ -214,6 +222,7 @@ class MonthlyDownloader:
             logger.info(f"  - {var}")
         logger.info(f"Sensor: {SENSOR_TYPE}")
         logger.info(f"Time aggregation: Month average")
+        logger.info(f"Day: 01 (required for monthly)")
         logger.info(f"Record type: {RECORD_TYPE}")
         logger.info(f"Version: {VERSION}")
         if AREA_BOUNDS:
@@ -263,6 +272,7 @@ class MonthlyDownloader:
             logger.error("1. Terms not accepted at CDS website")
             logger.error("2. Invalid API key in ~/.cdsapirc")
             logger.error("3. CDS queue is full - try again later")
+            logger.error("4. Missing 'day' parameter (now fixed in this version)")
             logger.error("="*70)
             
             # Mark as failed
@@ -373,7 +383,7 @@ def main():
     
     # Print banner
     print("\n" + "="*70)
-    print("ESA SOIL MOISTURE DOWNLOADER - MONTHLY AVERAGES")
+    print("ESA SOIL MOISTURE DOWNLOADER - MONTHLY AVERAGES (FIXED)")
     print("="*70)
     print("\nConfiguration:")
     print(f"  Years: {DOWNLOAD_YEARS}")
@@ -384,6 +394,7 @@ def main():
     print(f"  Sensor: {SENSOR_TYPE.title()}")
     print(f"  Region: {AREA_BOUNDS if AREA_BOUNDS else 'Global'}")
     print(f"  Output: {OUTPUT_DIR}")
+    print("\n✅ FIX: Added required 'day' parameter for monthly averages")
     print("="*70 + "\n")
     
     # Initialize downloader
