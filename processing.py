@@ -70,24 +70,25 @@ class SoilMoistureProcessor:
     
     Processes downloaded ESA CCI Soil Moisture monthly data:
     - Extracts NetCDF files from ZIP archives
-    - Separates variables (SSM, RZSM, Freeze/Thaw)
-    - Handles numbered RZSM layers (rzsm_1, rzsm_2, rzsm_3)
+    - Separates variables (SSM, RZSM only - no Freeze/Thaw in monthly data)
+    - Handles numbered RZSM layers (rzsm_1, rzsm_2, rzsm_3, rzsm_1m)
     - Organizes by date and variable type
     - Generates metadata and statistics
+    
+    NOTE: Monthly data does NOT include Freeze/Thaw classification.
+          This is only available in daily data products.
     """
     
     # Variable mapping
     VARIABLE_MAPPING = {
         'SSM': ['sm'],                    # Surface soil moisture
         'RZSM': ['rzsm'],                 # Root zone soil moisture (base name)
-        'freeze_thaw': ['ft', 'flag']     # Freeze/thaw classification
     }
     
     # Full variable names for documentation
     VARIABLE_NAMES = {
         'SSM': 'surface_soil_moisture_volumetric',
         'RZSM': 'root_zone_soil_moisture_volumetric',
-        'freeze_thaw': 'freeze_thaw_classification'
     }
     
     def __init__(self, base_dir="/home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly"):
@@ -109,8 +110,8 @@ class SoilMoistureProcessor:
         self.processed_dir.mkdir(parents=True, exist_ok=True)
         self.metadata_dir.mkdir(parents=True, exist_ok=True)
         
-        # Create variable directories
-        for var in ['SSM', 'RZSM', 'freeze_thaw']:
+        # Create variable directories (no freeze_thaw in monthly data)
+        for var in ['SSM', 'RZSM']:
             (self.processed_dir / var).mkdir(exist_ok=True)
         
         # Progress tracking
@@ -123,11 +124,12 @@ class SoilMoistureProcessor:
             'skipped': 0,
             'failed': 0,
             'total_size_mb': 0,
-            'variables_extracted': {var: 0 for var in ['SSM', 'RZSM', 'freeze_thaw']},
+            'variables_extracted': {var: 0 for var in ['SSM', 'RZSM']},
             'rzsm_layers_found': set()
         }
         
         logger.info("✅ Processor initialized for MONTHLY data")
+        logger.info(f"⚠️  Note: Monthly data does NOT include Freeze/Thaw")
         logger.info(f"Raw directory: {self.raw_dir}")
         logger.info(f"Processed directory: {self.processed_dir}")
     
@@ -227,7 +229,11 @@ class SoilMoistureProcessor:
     
     def find_rzsm_variables(self, ds):
         """
-        Find all RZSM variables in dataset (including numbered ones)
+        Find all RZSM variables in dataset
+        
+        Monthly data includes:
+        - rzsm_1, rzsm_2, rzsm_3: Different soil depth layers
+        - rzsm_1m: Alternative measurement for layer 1
         
         Parameters:
         -----------
@@ -240,9 +246,9 @@ class SoilMoistureProcessor:
         """
         rzsm_vars = []
         
-        # Check for numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3, etc.)
+        # Check for RZSM variables: rzsm_1, rzsm_2, rzsm_3, rzsm_1m
         for var in ds.data_vars:
-            if re.match(r'^rzsm(_\d+)?$', var):
+            if re.match(r'^rzsm(_\d+m?)?$', var):  # Matches rzsm_1, rzsm_1m, etc.
                 rzsm_vars.append(var)
         
         return sorted(rzsm_vars)
@@ -454,38 +460,6 @@ class SoilMoistureProcessor:
                     else:
                         logger.info(f"  ⚠️  RZSM not found in file")
                     
-                    # 3. Process Freeze/Thaw
-                    freeze_thaw_var = None
-                    for possible_name in ['ft', 'flag']:
-                        if possible_name in ds.data_vars:
-                            freeze_thaw_var = possible_name
-                            break
-                    
-                    if freeze_thaw_var:
-                        logger.info(f"  ✓ Found freeze_thaw ({freeze_thaw_var})")
-                        
-                        var_ds = ds[[freeze_thaw_var]]
-                        var_ds = self.add_crs_information(var_ds)
-                        
-                        var_dir = self.processed_dir / 'freeze_thaw' / str(year)
-                        var_dir.mkdir(parents=True, exist_ok=True)
-                        
-                        output_name = f"freeze_thaw_{year}_{month:02d}_{time_agg}.nc"
-                        output_path = var_dir / output_name
-                        
-                        logger.info(f"  💾 Saving to: {output_path}")
-                        var_ds.to_netcdf(output_path)
-                        
-                        var_data = ds[freeze_thaw_var]
-                        valid_pixels = np.isfinite(var_data).sum().values
-                        
-                        logger.info(f"  📈 Valid pixels: {valid_pixels:,}")
-                        logger.info(f"  📏 Shape: {var_data.shape}")
-                        
-                        results['variables_found'].append('freeze_thaw')
-                        results['output_files'].append(str(output_path))
-                        self.stats['variables_extracted']['freeze_thaw'] += 1
-                    
                     ds.close()
                     
                 except Exception as e:
@@ -566,7 +540,7 @@ class SoilMoistureProcessor:
         
         records = []
         
-        for var_type in ['SSM', 'RZSM', 'freeze_thaw']:
+        for var_type in ['SSM', 'RZSM']:
             var_dir = self.processed_dir / var_type
             
             if not var_dir.exists():
@@ -614,12 +588,11 @@ class SoilMoistureProcessor:
                             time_vals = pd.to_datetime(ds.time.values)
                             record['temporal_coverage'] = f"{time_vals[0]} to {time_vals[-1]}"
                         
-                        # Stats for non-categorical variables
-                        if var_type != 'freeze_thaw':
-                            record['min_value'] = float(var_data.min().values)
-                            record['max_value'] = float(var_data.max().values)
-                            record['mean_value'] = float(var_data.mean().values)
-                            record['std_value'] = float(var_data.std().values)
+                        # Stats for all variables (monthly data has no freeze_thaw)
+                        record['min_value'] = float(var_data.min().values)
+                        record['max_value'] = float(var_data.max().values)
+                        record['mean_value'] = float(var_data.mean().values)
+                        record['std_value'] = float(var_data.std().values)
                         
                         records.append(record)
                     
@@ -657,7 +630,7 @@ class SoilMoistureProcessor:
         }
         
         # Count files per variable
-        for var_type in ['SSM', 'RZSM', 'freeze_thaw']:
+        for var_type in ['SSM', 'RZSM']:
             var_dir = self.processed_dir / var_type
             if var_dir.exists():
                 nc_files = list(var_dir.rglob("*.nc"))

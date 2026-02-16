@@ -595,3 +595,25 @@
 2026-02-16 10:30:26,652 - INFO - Output files: 2
 2026-02-16 10:30:26,652 - INFO - ======================================================================
 2026-02-16 10:30:26,655 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:42:13,906 - INFO - ✅ Processor initialized for MONTHLY data
+2026-02-16 10:42:13,907 - INFO - ⚠️  Note: Monthly data does NOT include Freeze/Thaw
+2026-02-16 10:42:13,907 - INFO - Raw directory: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/raw
+2026-02-16 10:42:13,908 - INFO - Processed directory: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed
+2026-02-16 10:42:13,909 - INFO - 📁 Found 12 ZIP file(s) to process
+2026-02-16 10:42:13,910 - INFO - 
+======================================================================
+2026-02-16 10:42:13,911 - INFO - PROCESSING 12 MONTHLY FILE(S)
+2026-02-16 10:42:13,911 - INFO - ======================================================================
+
+2026-02-16 10:42:13,922 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_01.zip (already processed)
+2026-02-16 10:42:14,424 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_02.zip (already processed)
+2026-02-16 10:42:14,926 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_03.zip (already processed)
+2026-02-16 10:42:15,428 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_04.zip (already processed)
+2026-02-16 10:42:15,930 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_05.zip (already processed)
+2026-02-16 10:42:16,432 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_06.zip (already processed)
+2026-02-16 10:42:16,934 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_07.zip (already processed)
+2026-02-16 10:42:17,436 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_08.zip (already processed)
+2026-02-16 10:42:17,938 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_09.zip (already processed)
+2026-02-16 10:42:18,440 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_10.zip (already processed)
+2026-02-16 10:42:18,942 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_11.zip (already processed)
+2026-02-16 10:42:19,443 - INFO - ⏭️  Skipping soil_moisture_monthly_2024_12.zip (already processed)
