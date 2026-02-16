@@ -1,0 +1,597 @@
+2026-02-16 10:29:58,775 - INFO - ✅ Processor initialized for MONTHLY data
+2026-02-16 10:29:58,776 - INFO - Raw directory: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/raw
+2026-02-16 10:29:58,776 - INFO - Processed directory: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed
+2026-02-16 10:29:58,778 - INFO - 📁 Found 12 ZIP file(s) to process
+2026-02-16 10:29:58,778 - INFO - 
+======================================================================
+2026-02-16 10:29:58,779 - INFO - PROCESSING 12 MONTHLY FILE(S)
+2026-02-16 10:29:58,779 - INFO - ======================================================================
+
+2026-02-16 10:29:58,790 - INFO - ======================================================================
+2026-02-16 10:29:58,790 - INFO - PROCESSING: soil_moisture_monthly_2024_01.zip
+2026-02-16 10:29:58,791 - INFO - ======================================================================
+2026-02-16 10:29:58,791 - INFO - Year: 2024, Month: 01
+2026-02-16 10:29:58,791 - INFO - Time aggregation: monthly
+2026-02-16 10:29:58,792 - INFO - File size: 0.88 MB
+2026-02-16 10:29:58,792 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:29:58,796 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:29:58,800 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:29:58,806 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:29:58,807 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:29:59,570 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:29:59,571 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:29:59,571 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:29:59,575 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_01_monthly.nc
+2026-02-16 10:29:59,998 - INFO -   📈 Valid pixels: 40,097
+2026-02-16 10:29:59,999 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:00,012 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:00,013 - INFO -   📊 Max: 0.4287
+2026-02-16 10:30:00,016 - INFO -   📊 Mean: 0.1531
+2026-02-16 10:30:00,017 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:00,018 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:00,061 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:00,062 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:00,062 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:00,068 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_01_monthly.nc
+2026-02-16 10:30:01,264 - INFO -   📈 rzsm_1: Valid pixels: 40,196
+2026-02-16 10:30:01,264 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:01,266 - INFO -      Min: 0.0045
+2026-02-16 10:30:01,268 - INFO -      Max: 0.4199
+2026-02-16 10:30:01,271 - INFO -      Mean: 0.1537
+2026-02-16 10:30:01,277 - INFO -   📈 rzsm_2: Valid pixels: 40,184
+2026-02-16 10:30:01,278 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:01,280 - INFO -      Min: 0.0075
+2026-02-16 10:30:01,281 - INFO -      Max: 0.4167
+2026-02-16 10:30:01,285 - INFO -      Mean: 0.1533
+2026-02-16 10:30:01,291 - INFO -   📈 rzsm_3: Valid pixels: 40,182
+2026-02-16 10:30:01,291 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:01,293 - INFO -      Min: 0.0134
+2026-02-16 10:30:01,295 - INFO -      Max: 0.3976
+2026-02-16 10:30:01,298 - INFO -      Mean: 0.1495
+2026-02-16 10:30:01,300 - INFO - ======================================================================
+2026-02-16 10:30:01,301 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:01,301 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:01,302 - INFO - Output files: 2
+2026-02-16 10:30:01,302 - INFO - ======================================================================
+2026-02-16 10:30:01,305 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:01,807 - INFO - ======================================================================
+2026-02-16 10:30:01,808 - INFO - PROCESSING: soil_moisture_monthly_2024_02.zip
+2026-02-16 10:30:01,808 - INFO - ======================================================================
+2026-02-16 10:30:01,808 - INFO - Year: 2024, Month: 02
+2026-02-16 10:30:01,809 - INFO - Time aggregation: monthly
+2026-02-16 10:30:01,809 - INFO - File size: 0.88 MB
+2026-02-16 10:30:01,810 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:01,819 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:01,823 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:01,832 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:01,832 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:01,885 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:01,886 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:01,886 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:01,892 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_02_monthly.nc
+2026-02-16 10:30:02,334 - INFO -   📈 Valid pixels: 40,321
+2026-02-16 10:30:02,335 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:02,336 - INFO -   📊 Min: 0.0028
+2026-02-16 10:30:02,338 - INFO -   📊 Max: 0.4275
+2026-02-16 10:30:02,341 - INFO -   📊 Mean: 0.1479
+2026-02-16 10:30:02,342 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:02,343 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:02,397 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:02,398 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:02,398 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:02,404 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_02_monthly.nc
+2026-02-16 10:30:03,618 - INFO -   📈 rzsm_1: Valid pixels: 40,327
+2026-02-16 10:30:03,618 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:03,620 - INFO -      Min: 0.0028
+2026-02-16 10:30:03,622 - INFO -      Max: 0.4271
+2026-02-16 10:30:03,625 - INFO -      Mean: 0.1487
+2026-02-16 10:30:03,630 - INFO -   📈 rzsm_2: Valid pixels: 40,327
+2026-02-16 10:30:03,631 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:03,633 - INFO -      Min: 0.0028
+2026-02-16 10:30:03,635 - INFO -      Max: 0.4225
+2026-02-16 10:30:03,638 - INFO -      Mean: 0.1502
+2026-02-16 10:30:03,645 - INFO -   📈 rzsm_3: Valid pixels: 40,325
+2026-02-16 10:30:03,646 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:03,647 - INFO -      Min: 0.0104
+2026-02-16 10:30:03,649 - INFO -      Max: 0.4068
+2026-02-16 10:30:03,653 - INFO -      Mean: 0.1493
+2026-02-16 10:30:03,655 - INFO - ======================================================================
+2026-02-16 10:30:03,656 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:03,656 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:03,656 - INFO - Output files: 2
+2026-02-16 10:30:03,657 - INFO - ======================================================================
+2026-02-16 10:30:03,660 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:04,163 - INFO - ======================================================================
+2026-02-16 10:30:04,165 - INFO - PROCESSING: soil_moisture_monthly_2024_03.zip
+2026-02-16 10:30:04,166 - INFO - ======================================================================
+2026-02-16 10:30:04,166 - INFO - Year: 2024, Month: 03
+2026-02-16 10:30:04,167 - INFO - Time aggregation: monthly
+2026-02-16 10:30:04,169 - INFO - File size: 0.88 MB
+2026-02-16 10:30:04,170 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:04,179 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:04,194 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240301000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:04,207 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240301000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:04,207 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240301000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:04,248 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:04,249 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:04,249 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:04,254 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_03_monthly.nc
+2026-02-16 10:30:04,673 - INFO -   📈 Valid pixels: 40,634
+2026-02-16 10:30:04,673 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:04,675 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:04,677 - INFO -   📊 Max: 0.4362
+2026-02-16 10:30:04,680 - INFO -   📊 Mean: 0.1471
+2026-02-16 10:30:04,680 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:04,682 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240301000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:04,731 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:04,731 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:04,732 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:04,737 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_03_monthly.nc
+2026-02-16 10:30:05,936 - INFO -   📈 rzsm_1: Valid pixels: 40,641
+2026-02-16 10:30:05,937 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:05,939 - INFO -      Min: 0.0056
+2026-02-16 10:30:05,940 - INFO -      Max: 0.4268
+2026-02-16 10:30:05,943 - INFO -      Mean: 0.1466
+2026-02-16 10:30:05,950 - INFO -   📈 rzsm_2: Valid pixels: 40,637
+2026-02-16 10:30:05,950 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:05,952 - INFO -      Min: 0.0059
+2026-02-16 10:30:05,953 - INFO -      Max: 0.4235
+2026-02-16 10:30:05,957 - INFO -      Mean: 0.1471
+2026-02-16 10:30:05,962 - INFO -   📈 rzsm_3: Valid pixels: 40,639
+2026-02-16 10:30:05,963 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:05,964 - INFO -      Min: 0.0071
+2026-02-16 10:30:05,966 - INFO -      Max: 0.4128
+2026-02-16 10:30:05,969 - INFO -      Mean: 0.1480
+2026-02-16 10:30:05,971 - INFO - ======================================================================
+2026-02-16 10:30:05,972 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:05,972 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:05,973 - INFO - Output files: 2
+2026-02-16 10:30:05,973 - INFO - ======================================================================
+2026-02-16 10:30:05,979 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:06,483 - INFO - ======================================================================
+2026-02-16 10:30:06,485 - INFO - PROCESSING: soil_moisture_monthly_2024_04.zip
+2026-02-16 10:30:06,488 - INFO - ======================================================================
+2026-02-16 10:30:06,489 - INFO - Year: 2024, Month: 04
+2026-02-16 10:30:06,490 - INFO - Time aggregation: monthly
+2026-02-16 10:30:06,492 - INFO - File size: 0.88 MB
+2026-02-16 10:30:06,496 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:06,508 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:06,512 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240401000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:06,524 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240401000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:06,525 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240401000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:06,574 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:06,575 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:06,575 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:06,581 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_04_monthly.nc
+2026-02-16 10:30:07,011 - INFO -   📈 Valid pixels: 40,777
+2026-02-16 10:30:07,011 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:07,013 - INFO -   📊 Min: 0.0014
+2026-02-16 10:30:07,015 - INFO -   📊 Max: 0.4534
+2026-02-16 10:30:07,018 - INFO -   📊 Mean: 0.1519
+2026-02-16 10:30:07,019 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:07,021 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240401000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:07,074 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:07,075 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:07,075 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:07,081 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_04_monthly.nc
+2026-02-16 10:30:08,265 - INFO -   📈 rzsm_1: Valid pixels: 40,780
+2026-02-16 10:30:08,266 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:08,267 - INFO -      Min: 0.0072
+2026-02-16 10:30:08,269 - INFO -      Max: 0.4610
+2026-02-16 10:30:08,272 - INFO -      Mean: 0.1520
+2026-02-16 10:30:08,278 - INFO -   📈 rzsm_2: Valid pixels: 40,780
+2026-02-16 10:30:08,279 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:08,281 - INFO -      Min: 0.0087
+2026-02-16 10:30:08,282 - INFO -      Max: 0.4551
+2026-02-16 10:30:08,285 - INFO -      Mean: 0.1510
+2026-02-16 10:30:08,291 - INFO -   📈 rzsm_3: Valid pixels: 40,778
+2026-02-16 10:30:08,292 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:08,294 - INFO -      Min: 0.0123
+2026-02-16 10:30:08,295 - INFO -      Max: 0.4341
+2026-02-16 10:30:08,299 - INFO -      Mean: 0.1496
+2026-02-16 10:30:08,301 - INFO - ======================================================================
+2026-02-16 10:30:08,301 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:08,302 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:08,302 - INFO - Output files: 2
+2026-02-16 10:30:08,303 - INFO - ======================================================================
+2026-02-16 10:30:08,305 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:08,808 - INFO - ======================================================================
+2026-02-16 10:30:08,812 - INFO - PROCESSING: soil_moisture_monthly_2024_05.zip
+2026-02-16 10:30:08,814 - INFO - ======================================================================
+2026-02-16 10:30:08,815 - INFO - Year: 2024, Month: 05
+2026-02-16 10:30:08,816 - INFO - Time aggregation: monthly
+2026-02-16 10:30:08,821 - INFO - File size: 0.87 MB
+2026-02-16 10:30:08,822 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:08,823 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:08,832 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240501000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:08,859 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240501000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:08,863 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240501000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:08,909 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:08,910 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:08,911 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:08,919 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_05_monthly.nc
+2026-02-16 10:30:09,328 - INFO -   📈 Valid pixels: 40,773
+2026-02-16 10:30:09,329 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:09,331 - INFO -   📊 Min: 0.0065
+2026-02-16 10:30:09,332 - INFO -   📊 Max: 0.4063
+2026-02-16 10:30:09,335 - INFO -   📊 Mean: 0.1409
+2026-02-16 10:30:09,336 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:09,338 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240501000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:09,389 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:09,390 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:09,391 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:09,396 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_05_monthly.nc
+2026-02-16 10:30:10,566 - INFO -   📈 rzsm_1: Valid pixels: 40,791
+2026-02-16 10:30:10,567 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:10,569 - INFO -      Min: 0.0085
+2026-02-16 10:30:10,570 - INFO -      Max: 0.4169
+2026-02-16 10:30:10,574 - INFO -      Mean: 0.1432
+2026-02-16 10:30:10,580 - INFO -   📈 rzsm_2: Valid pixels: 40,790
+2026-02-16 10:30:10,581 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:10,582 - INFO -      Min: 0.0100
+2026-02-16 10:30:10,584 - INFO -      Max: 0.4308
+2026-02-16 10:30:10,588 - INFO -      Mean: 0.1457
+2026-02-16 10:30:10,594 - INFO -   📈 rzsm_3: Valid pixels: 40,777
+2026-02-16 10:30:10,595 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:10,596 - INFO -      Min: 0.0129
+2026-02-16 10:30:10,598 - INFO -      Max: 0.4339
+2026-02-16 10:30:10,601 - INFO -      Mean: 0.1481
+2026-02-16 10:30:10,604 - INFO - ======================================================================
+2026-02-16 10:30:10,604 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:10,605 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:10,605 - INFO - Output files: 2
+2026-02-16 10:30:10,605 - INFO - ======================================================================
+2026-02-16 10:30:10,608 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:11,111 - INFO - ======================================================================
+2026-02-16 10:30:11,112 - INFO - PROCESSING: soil_moisture_monthly_2024_06.zip
+2026-02-16 10:30:11,115 - INFO - ======================================================================
+2026-02-16 10:30:11,119 - INFO - Year: 2024, Month: 06
+2026-02-16 10:30:11,119 - INFO - Time aggregation: monthly
+2026-02-16 10:30:11,120 - INFO - File size: 0.87 MB
+2026-02-16 10:30:11,121 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:11,130 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:11,137 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240601000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:11,149 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240601000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:11,150 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240601000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:11,194 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:11,195 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:11,197 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:11,203 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_06_monthly.nc
+2026-02-16 10:30:11,613 - INFO -   📈 Valid pixels: 40,596
+2026-02-16 10:30:11,614 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:11,616 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:11,618 - INFO -   📊 Max: 0.4086
+2026-02-16 10:30:11,621 - INFO -   📊 Mean: 0.1344
+2026-02-16 10:30:11,622 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:11,624 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240601000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:11,678 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:11,679 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:11,679 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:11,683 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_06_monthly.nc
+2026-02-16 10:30:12,837 - INFO -   📈 rzsm_1: Valid pixels: 40,601
+2026-02-16 10:30:12,838 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:12,840 - INFO -      Min: 0.0037
+2026-02-16 10:30:12,841 - INFO -      Max: 0.4032
+2026-02-16 10:30:12,845 - INFO -      Mean: 0.1347
+2026-02-16 10:30:12,850 - INFO -   📈 rzsm_2: Valid pixels: 40,601
+2026-02-16 10:30:12,851 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:12,853 - INFO -      Min: 0.0070
+2026-02-16 10:30:12,854 - INFO -      Max: 0.3920
+2026-02-16 10:30:12,857 - INFO -      Mean: 0.1367
+2026-02-16 10:30:12,863 - INFO -   📈 rzsm_3: Valid pixels: 40,603
+2026-02-16 10:30:12,864 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:12,866 - INFO -      Min: 0.0097
+2026-02-16 10:30:12,867 - INFO -      Max: 0.3929
+2026-02-16 10:30:12,870 - INFO -      Mean: 0.1423
+2026-02-16 10:30:12,872 - INFO - ======================================================================
+2026-02-16 10:30:12,873 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:12,873 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:12,874 - INFO - Output files: 2
+2026-02-16 10:30:12,874 - INFO - ======================================================================
+2026-02-16 10:30:12,877 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:13,380 - INFO - ======================================================================
+2026-02-16 10:30:13,380 - INFO - PROCESSING: soil_moisture_monthly_2024_07.zip
+2026-02-16 10:30:13,381 - INFO - ======================================================================
+2026-02-16 10:30:13,381 - INFO - Year: 2024, Month: 07
+2026-02-16 10:30:13,381 - INFO - Time aggregation: monthly
+2026-02-16 10:30:13,382 - INFO - File size: 0.87 MB
+2026-02-16 10:30:13,383 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:13,392 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:13,400 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240701000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:13,412 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240701000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:13,413 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240701000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:13,471 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:13,472 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:13,472 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:13,477 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_07_monthly.nc
+2026-02-16 10:30:13,906 - INFO -   📈 Valid pixels: 40,644
+2026-02-16 10:30:13,907 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:13,908 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:13,910 - INFO -   📊 Max: 0.4402
+2026-02-16 10:30:13,913 - INFO -   📊 Mean: 0.1374
+2026-02-16 10:30:13,914 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:13,915 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240701000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:13,969 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:13,970 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:13,970 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:13,975 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_07_monthly.nc
+2026-02-16 10:30:15,125 - INFO -   📈 rzsm_1: Valid pixels: 40,651
+2026-02-16 10:30:15,126 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:15,128 - INFO -      Min: 0.0000
+2026-02-16 10:30:15,129 - INFO -      Max: 0.4253
+2026-02-16 10:30:15,133 - INFO -      Mean: 0.1364
+2026-02-16 10:30:15,139 - INFO -   📈 rzsm_2: Valid pixels: 40,651
+2026-02-16 10:30:15,139 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:15,141 - INFO -      Min: 0.0009
+2026-02-16 10:30:15,142 - INFO -      Max: 0.4056
+2026-02-16 10:30:15,146 - INFO -      Mean: 0.1359
+2026-02-16 10:30:15,152 - INFO -   📈 rzsm_3: Valid pixels: 40,652
+2026-02-16 10:30:15,152 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:15,154 - INFO -      Min: 0.0127
+2026-02-16 10:30:15,156 - INFO -      Max: 0.3816
+2026-02-16 10:30:15,159 - INFO -      Mean: 0.1389
+2026-02-16 10:30:15,161 - INFO - ======================================================================
+2026-02-16 10:30:15,161 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:15,162 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:15,162 - INFO - Output files: 2
+2026-02-16 10:30:15,162 - INFO - ======================================================================
+2026-02-16 10:30:15,165 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:15,668 - INFO - ======================================================================
+2026-02-16 10:30:15,669 - INFO - PROCESSING: soil_moisture_monthly_2024_08.zip
+2026-02-16 10:30:15,669 - INFO - ======================================================================
+2026-02-16 10:30:15,670 - INFO - Year: 2024, Month: 08
+2026-02-16 10:30:15,671 - INFO - Time aggregation: monthly
+2026-02-16 10:30:15,672 - INFO - File size: 0.87 MB
+2026-02-16 10:30:15,673 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:15,682 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:15,690 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240801000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:15,699 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240801000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:15,700 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240801000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:15,749 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:15,750 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:15,750 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:15,755 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_08_monthly.nc
+2026-02-16 10:30:16,160 - INFO -   📈 Valid pixels: 40,740
+2026-02-16 10:30:16,161 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:16,162 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:16,164 - INFO -   📊 Max: 0.4506
+2026-02-16 10:30:16,167 - INFO -   📊 Mean: 0.1494
+2026-02-16 10:30:16,168 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:16,170 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240801000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:16,226 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:16,227 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:16,228 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:16,233 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_08_monthly.nc
+2026-02-16 10:30:17,397 - INFO -   📈 rzsm_1: Valid pixels: 40,760
+2026-02-16 10:30:17,398 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:17,399 - INFO -      Min: 0.0004
+2026-02-16 10:30:17,401 - INFO -      Max: 0.4437
+2026-02-16 10:30:17,404 - INFO -      Mean: 0.1474
+2026-02-16 10:30:17,410 - INFO -   📈 rzsm_2: Valid pixels: 40,758
+2026-02-16 10:30:17,411 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:17,412 - INFO -      Min: 0.0075
+2026-02-16 10:30:17,414 - INFO -      Max: 0.4342
+2026-02-16 10:30:17,417 - INFO -      Mean: 0.1445
+2026-02-16 10:30:17,423 - INFO -   📈 rzsm_3: Valid pixels: 40,742
+2026-02-16 10:30:17,424 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:17,425 - INFO -      Min: 0.0123
+2026-02-16 10:30:17,427 - INFO -      Max: 0.3948
+2026-02-16 10:30:17,430 - INFO -      Mean: 0.1417
+2026-02-16 10:30:17,432 - INFO - ======================================================================
+2026-02-16 10:30:17,433 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:17,433 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:17,434 - INFO - Output files: 2
+2026-02-16 10:30:17,434 - INFO - ======================================================================
+2026-02-16 10:30:17,437 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:17,939 - INFO - ======================================================================
+2026-02-16 10:30:17,939 - INFO - PROCESSING: soil_moisture_monthly_2024_09.zip
+2026-02-16 10:30:17,940 - INFO - ======================================================================
+2026-02-16 10:30:17,940 - INFO - Year: 2024, Month: 09
+2026-02-16 10:30:17,940 - INFO - Time aggregation: monthly
+2026-02-16 10:30:17,941 - INFO - File size: 0.87 MB
+2026-02-16 10:30:17,941 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:17,950 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:17,954 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240901000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:17,961 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20240901000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:17,962 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20240901000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:17,991 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:17,992 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:17,992 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:17,997 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_09_monthly.nc
+2026-02-16 10:30:18,443 - INFO -   📈 Valid pixels: 40,598
+2026-02-16 10:30:18,444 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:18,446 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:18,448 - INFO -   📊 Max: 0.4553
+2026-02-16 10:30:18,451 - INFO -   📊 Mean: 0.1545
+2026-02-16 10:30:18,452 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:18,454 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20240901000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:18,517 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:18,518 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:18,519 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:18,525 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_09_monthly.nc
+2026-02-16 10:30:19,657 - INFO -   📈 rzsm_1: Valid pixels: 40,621
+2026-02-16 10:30:19,657 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:19,659 - INFO -      Min: 0.0039
+2026-02-16 10:30:19,661 - INFO -      Max: 0.4500
+2026-02-16 10:30:19,664 - INFO -      Mean: 0.1543
+2026-02-16 10:30:19,670 - INFO -   📈 rzsm_2: Valid pixels: 40,626
+2026-02-16 10:30:19,671 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:19,673 - INFO -      Min: 0.0044
+2026-02-16 10:30:19,675 - INFO -      Max: 0.4383
+2026-02-16 10:30:19,678 - INFO -      Mean: 0.1526
+2026-02-16 10:30:19,683 - INFO -   📈 rzsm_3: Valid pixels: 40,618
+2026-02-16 10:30:19,683 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:19,685 - INFO -      Min: 0.0054
+2026-02-16 10:30:19,687 - INFO -      Max: 0.4083
+2026-02-16 10:30:19,689 - INFO -      Mean: 0.1473
+2026-02-16 10:30:19,691 - INFO - ======================================================================
+2026-02-16 10:30:19,692 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:19,692 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:19,693 - INFO - Output files: 2
+2026-02-16 10:30:19,693 - INFO - ======================================================================
+2026-02-16 10:30:19,695 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:20,198 - INFO - ======================================================================
+2026-02-16 10:30:20,200 - INFO - PROCESSING: soil_moisture_monthly_2024_10.zip
+2026-02-16 10:30:20,203 - INFO - ======================================================================
+2026-02-16 10:30:20,206 - INFO - Year: 2024, Month: 10
+2026-02-16 10:30:20,209 - INFO - Time aggregation: monthly
+2026-02-16 10:30:20,209 - INFO - File size: 0.87 MB
+2026-02-16 10:30:20,214 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:20,227 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:20,239 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20241001000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:20,250 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20241001000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:20,250 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20241001000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:20,297 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:20,298 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:20,299 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:20,307 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_10_monthly.nc
+2026-02-16 10:30:20,742 - INFO -   📈 Valid pixels: 40,572
+2026-02-16 10:30:20,743 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:20,745 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:20,747 - INFO -   📊 Max: 0.4322
+2026-02-16 10:30:20,750 - INFO -   📊 Mean: 0.1466
+2026-02-16 10:30:20,751 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:20,752 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20241001000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:20,801 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:20,802 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:20,802 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:20,807 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_10_monthly.nc
+2026-02-16 10:30:22,018 - INFO -   📈 rzsm_1: Valid pixels: 40,595
+2026-02-16 10:30:22,019 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:22,021 - INFO -      Min: 0.0000
+2026-02-16 10:30:22,022 - INFO -      Max: 0.4391
+2026-02-16 10:30:22,025 - INFO -      Mean: 0.1477
+2026-02-16 10:30:22,031 - INFO -   📈 rzsm_2: Valid pixels: 40,597
+2026-02-16 10:30:22,032 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:22,034 - INFO -      Min: 0.0000
+2026-02-16 10:30:22,035 - INFO -      Max: 0.4469
+2026-02-16 10:30:22,038 - INFO -      Mean: 0.1494
+2026-02-16 10:30:22,045 - INFO -   📈 rzsm_3: Valid pixels: 40,592
+2026-02-16 10:30:22,045 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:22,047 - INFO -      Min: 0.0010
+2026-02-16 10:30:22,049 - INFO -      Max: 0.4188
+2026-02-16 10:30:22,052 - INFO -      Mean: 0.1485
+2026-02-16 10:30:22,054 - INFO - ======================================================================
+2026-02-16 10:30:22,054 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:22,055 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:22,055 - INFO - Output files: 2
+2026-02-16 10:30:22,056 - INFO - ======================================================================
+2026-02-16 10:30:22,058 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:22,561 - INFO - ======================================================================
+2026-02-16 10:30:22,562 - INFO - PROCESSING: soil_moisture_monthly_2024_11.zip
+2026-02-16 10:30:22,562 - INFO - ======================================================================
+2026-02-16 10:30:22,563 - INFO - Year: 2024, Month: 11
+2026-02-16 10:30:22,564 - INFO - Time aggregation: monthly
+2026-02-16 10:30:22,565 - INFO - File size: 0.87 MB
+2026-02-16 10:30:22,566 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:22,576 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:22,585 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20241101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:22,597 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20241101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:22,598 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20241101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:22,640 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:22,642 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:22,643 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:22,648 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_11_monthly.nc
+2026-02-16 10:30:23,079 - INFO -   📈 Valid pixels: 40,495
+2026-02-16 10:30:23,080 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:23,081 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:23,083 - INFO -   📊 Max: 0.4367
+2026-02-16 10:30:23,086 - INFO -   📊 Mean: 0.1498
+2026-02-16 10:30:23,087 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:23,089 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20241101000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:23,142 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:23,142 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:23,143 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:23,148 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_11_monthly.nc
+2026-02-16 10:30:24,328 - INFO -   📈 rzsm_1: Valid pixels: 40,510
+2026-02-16 10:30:24,328 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:24,330 - INFO -      Min: 0.0000
+2026-02-16 10:30:24,331 - INFO -      Max: 0.4442
+2026-02-16 10:30:24,333 - INFO -      Mean: 0.1496
+2026-02-16 10:30:24,338 - INFO -   📈 rzsm_2: Valid pixels: 40,512
+2026-02-16 10:30:24,338 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:24,339 - INFO -      Min: 0.0000
+2026-02-16 10:30:24,341 - INFO -      Max: 0.4422
+2026-02-16 10:30:24,343 - INFO -      Mean: 0.1492
+2026-02-16 10:30:24,348 - INFO -   📈 rzsm_3: Valid pixels: 40,510
+2026-02-16 10:30:24,349 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:24,351 - INFO -      Min: 0.0002
+2026-02-16 10:30:24,352 - INFO -      Max: 0.4216
+2026-02-16 10:30:24,355 - INFO -      Mean: 0.1487
+2026-02-16 10:30:24,357 - INFO - ======================================================================
+2026-02-16 10:30:24,357 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:24,358 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:24,358 - INFO - Output files: 2
+2026-02-16 10:30:24,358 - INFO - ======================================================================
+2026-02-16 10:30:24,362 - INFO - 🧹 Cleaned up temp directory
+2026-02-16 10:30:24,864 - INFO - ======================================================================
+2026-02-16 10:30:24,865 - INFO - PROCESSING: soil_moisture_monthly_2024_12.zip
+2026-02-16 10:30:24,865 - INFO - ======================================================================
+2026-02-16 10:30:24,866 - INFO - Year: 2024, Month: 12
+2026-02-16 10:30:24,866 - INFO - Time aggregation: monthly
+2026-02-16 10:30:24,866 - INFO - File size: 0.88 MB
+2026-02-16 10:30:24,867 - INFO - 📦 Extracting ZIP file...
+2026-02-16 10:30:24,876 - INFO - Found 2 NetCDF file(s) in archive
+2026-02-16 10:30:24,883 - INFO -   ✓ Extracted: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20241201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:24,891 - INFO -   ✓ Extracted: C3S-RZSM-L3S-RZSMV-MONTHLY-20241201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:24,892 - INFO - 
+📊 Processing: C3S-SOILMOISTURE-L3S-SSMV-COMBINED-MONTHLY-20241201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:24,935 - INFO - Variables in file: ['sm', 'sensor', 'freqbandID', 'nobs']
+2026-02-16 10:30:24,935 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:24,936 - INFO -   ✓ Found SSM (sm)
+2026-02-16 10:30:24,940 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/SSM/2024/SSM_2024_12_monthly.nc
+2026-02-16 10:30:25,405 - INFO -   📈 Valid pixels: 39,605
+2026-02-16 10:30:25,406 - INFO -   📏 Shape: (1, 320, 300)
+2026-02-16 10:30:25,408 - INFO -   📊 Min: 0.0000
+2026-02-16 10:30:25,409 - INFO -   📊 Max: 0.4580
+2026-02-16 10:30:25,412 - INFO -   📊 Mean: 0.1453
+2026-02-16 10:30:25,413 - INFO -   ⚠️  RZSM not found in file
+2026-02-16 10:30:25,415 - INFO - 
+📊 Processing: C3S-RZSM-L3S-RZSMV-MONTHLY-20241201000000-TCDR-v202505.0.0.area-subset.40.55.-40.-20.nc
+2026-02-16 10:30:25,467 - INFO - Variables in file: ['rzsm_1', 'rzsm_2', 'rzsm_3', 'rzsm_1m', 'nobs_1', 'nobs_2', 'nobs_3', 'nobs_1m']
+2026-02-16 10:30:25,468 - INFO - Dimensions: {'time': 1, 'lat': 320, 'lon': 300}
+2026-02-16 10:30:25,468 - INFO -   ✓ Found RZSM variables: ['rzsm_1', 'rzsm_2', 'rzsm_3']
+2026-02-16 10:30:25,474 - INFO -   💾 Saving to: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly/processed/RZSM/2024/RZSM_2024_12_monthly.nc
+2026-02-16 10:30:26,618 - INFO -   📈 rzsm_1: Valid pixels: 39,654
+2026-02-16 10:30:26,618 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:26,619 - INFO -      Min: 0.0000
+2026-02-16 10:30:26,621 - INFO -      Max: 0.4517
+2026-02-16 10:30:26,624 - INFO -      Mean: 0.1456
+2026-02-16 10:30:26,629 - INFO -   📈 rzsm_2: Valid pixels: 39,718
+2026-02-16 10:30:26,630 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:26,632 - INFO -      Min: 0.0000
+2026-02-16 10:30:26,633 - INFO -      Max: 0.4156
+2026-02-16 10:30:26,636 - INFO -      Mean: 0.1464
+2026-02-16 10:30:26,642 - INFO -   📈 rzsm_3: Valid pixels: 39,925
+2026-02-16 10:30:26,642 - INFO -      Shape: (1, 320, 300)
+2026-02-16 10:30:26,644 - INFO -      Min: 0.0001
+2026-02-16 10:30:26,646 - INFO -      Max: 0.3958
+2026-02-16 10:30:26,649 - INFO -      Mean: 0.1476
+2026-02-16 10:30:26,651 - INFO - ======================================================================
+2026-02-16 10:30:26,651 - INFO - ✅ PROCESSING SUCCESSFUL!
+2026-02-16 10:30:26,652 - INFO - Variables extracted: ['SSM', 'RZSM']
+2026-02-16 10:30:26,652 - INFO - Output files: 2
+2026-02-16 10:30:26,652 - INFO - ======================================================================
+2026-02-16 10:30:26,655 - INFO - 🧹 Cleaned up temp directory

@@ -222,7 +222,7 @@ def main():
         description='Investigate ZIP file contents for soil moisture data'
     )
     parser.add_argument('--base-dir', type=str, 
-                       default='./data/soil_moisture',
+                       default='./data/soil_moisture_monthly',
                        help='Base directory containing raw/ subdirectory')
     parser.add_argument('--save-report', type=str,
                        help='Save detailed report to JSON file')

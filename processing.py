@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 """
-ESA SOIL MOISTURE DATA PROCESSOR - PRODUCTION READY (FIXED)
-============================================================
-Processes downloaded soil moisture ZIP files and extracts NetCDF bands.
+ESA SOIL MOISTURE PROCESSOR - MONTHLY DATA
+===========================================
+Processes monthly average soil moisture ZIP files.
 
-FIXES:
-- Handles numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3)
-- Uses ds.sizes instead of ds.dims to avoid FutureWarning
-- Properly extracts all soil layers
+Configured for:
+- Monthly averaged data (not daily)
+- Base directory: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly
+- All three variables: SSM, RZSM (all layers), Freeze/Thaw
 
 Features:
-- Extracts SSM, RZSM (all layers), and Freeze/Thaw variables from ZIP files
-- Organizes by variable type and date
-- Quality control and metadata extraction
+- Handles numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3)
+- Uses ds.sizes instead of ds.dims
+- Properly extracts all soil layers
 - Progress tracking and resume capability
-- Handles both daily and monthly aggregations
 - Creates summary statistics and data catalog
+
+Usage:
+    python soil_moisture_processor_monthly.py
+    python soil_moisture_processor_monthly.py --year 2020
+    python soil_moisture_processor_monthly.py --stats
 
 Author: Production Ready
 Date: February 2026
@@ -53,7 +57,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('soil_moisture_processing.log'),
+        logging.FileHandler('soil_moisture_processing_monthly.log'),
         logging.StreamHandler()
     ]
 )
@@ -62,9 +66,9 @@ logger = logging.getLogger(__name__)
 
 class SoilMoistureProcessor:
     """
-    Production-ready soil moisture data processor
+    Processor for monthly average soil moisture data
     
-    Processes downloaded ESA CCI Soil Moisture data:
+    Processes downloaded ESA CCI Soil Moisture monthly data:
     - Extracts NetCDF files from ZIP archives
     - Separates variables (SSM, RZSM, Freeze/Thaw)
     - Handles numbered RZSM layers (rzsm_1, rzsm_2, rzsm_3)
@@ -72,8 +76,7 @@ class SoilMoistureProcessor:
     - Generates metadata and statistics
     """
     
-    # Variable mapping (internal name → possible NetCDF variable names)
-    # UPDATED: Now includes patterns to match numbered variables
+    # Variable mapping
     VARIABLE_MAPPING = {
         'SSM': ['sm'],                    # Surface soil moisture
         'RZSM': ['rzsm'],                 # Root zone soil moisture (base name)
@@ -87,7 +90,7 @@ class SoilMoistureProcessor:
         'freeze_thaw': 'freeze_thaw_classification'
     }
     
-    def __init__(self, base_dir="./data/soil_moisture"):
+    def __init__(self, base_dir="/home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly"):
         """
         Initialize processor
         
@@ -95,6 +98,7 @@ class SoilMoistureProcessor:
         -----------
         base_dir : str
             Base directory containing raw/ subdirectory
+            Default: /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly
         """
         self.base_dir = Path(base_dir)
         self.raw_dir = self.base_dir / "raw"
@@ -120,10 +124,10 @@ class SoilMoistureProcessor:
             'failed': 0,
             'total_size_mb': 0,
             'variables_extracted': {var: 0 for var in ['SSM', 'RZSM', 'freeze_thaw']},
-            'rzsm_layers_found': set()  # Track which RZSM layers we've seen
+            'rzsm_layers_found': set()
         }
         
-        logger.info("✅ Processor initialized")
+        logger.info("✅ Processor initialized for MONTHLY data")
         logger.info(f"Raw directory: {self.raw_dir}")
         logger.info(f"Processed directory: {self.processed_dir}")
     
@@ -174,7 +178,7 @@ class SoilMoistureProcessor:
         """
         # Add CRS as a variable (CF conventions)
         ds['crs'] = xr.DataArray(
-            data=0,  # Dummy value
+            data=0,
             attrs={
                 'grid_mapping_name': 'latitude_longitude',
                 'longitude_of_prime_meridian': 0.0,
@@ -223,7 +227,7 @@ class SoilMoistureProcessor:
     
     def find_rzsm_variables(self, ds):
         """
-        Find all RZSM variables in dataset (including numbered ones like rzsm_1, rzsm_2, rzsm_3)
+        Find all RZSM variables in dataset (including numbered ones)
         
         Parameters:
         -----------
@@ -279,7 +283,7 @@ class SoilMoistureProcessor:
         """
         Extract metadata from filename
         
-        Format: soil_moisture_YYYY_MM_sensor_timeagg.zip
+        Format: soil_moisture_monthly_YYYY_MM.zip
         
         Returns:
         --------
@@ -288,11 +292,11 @@ class SoilMoistureProcessor:
         parts = filename.stem.split('_')
         
         try:
+            # For monthly files: soil_moisture_monthly_2020_01.zip
             metadata = {
-                'year': int(parts[2]),
-                'month': int(parts[3]),
-                'sensor': parts[4],
-                'time_agg': parts[5]
+                'year': int(parts[3]),
+                'month': int(parts[4]),
+                'time_agg': 'monthly'
             }
             return metadata
         except (IndexError, ValueError) as e:
@@ -381,7 +385,7 @@ class SoilMoistureProcessor:
                     ds = xr.open_dataset(nc_path)
                     
                     logger.info(f"Variables in file: {list(ds.data_vars)}")
-                    logger.info(f"Dimensions: {dict(ds.sizes)}")  # FIXED: Use ds.sizes instead of ds.dims
+                    logger.info(f"Dimensions: {dict(ds.sizes)}")
                     
                     # 1. Process SSM (Surface Soil Moisture)
                     if 'sm' in ds.data_vars:
@@ -540,7 +544,7 @@ class SoilMoistureProcessor:
             return []
         
         logger.info(f"\n{'='*70}")
-        logger.info(f"PROCESSING {len(zip_files)} FILE(S)")
+        logger.info(f"PROCESSING {len(zip_files)} MONTHLY FILE(S)")
         logger.info(f"{'='*70}\n")
         
         all_results = []
@@ -670,7 +674,7 @@ class SoilMoistureProcessor:
     def print_summary(self):
         """Print processing summary"""
         print("\n" + "="*70)
-        print("PROCESSING SUMMARY")
+        print("PROCESSING SUMMARY - MONTHLY DATA")
         print("="*70)
         print(f"✅ Processed: {self.stats['processed']} file(s)")
         print(f"⏭️  Skipped: {self.stats['skipped']} file(s)")
@@ -690,34 +694,30 @@ def main():
     """Command-line interface"""
     
     parser = argparse.ArgumentParser(
-        description='Process ESA Soil Moisture Data - FIXED VERSION',
+        description='Process Monthly Soil Moisture Data',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Process all downloaded files
+  # Process all monthly files
   python %(prog)s
   
   # Process specific year
-  python %(prog)s --year 2022
+  python %(prog)s --year 2020
   
   # Process and generate catalog/stats
   python %(prog)s --stats
   
-  # Resume interrupted processing
-  python %(prog)s --resume
-  
   # Force reprocess everything
   python %(prog)s --no-resume
 
-FIXES:
-  - Handles numbered RZSM variables (rzsm_1, rzsm_2, rzsm_3)
-  - Uses ds.sizes instead of ds.dims
-  - Properly extracts all soil layers
+Default base directory:
+  /home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly
         """
     )
     
-    parser.add_argument('--base-dir', type=str, default='./data/soil_moisture',
-                       help='Base directory (default: ./data/soil_moisture)')
+    parser.add_argument('--base-dir', type=str, 
+                       default='/home/benjamin/Documents/Benjamin/Soil_Moisture/data/soil_moisture_monthly',
+                       help='Base directory (default: ~/...soil_moisture_monthly)')
     parser.add_argument('--year', type=int, default=None,
                        help='Process only specific year')
     parser.add_argument('--stats', action='store_true',
@@ -730,7 +730,7 @@ FIXES:
     args = parser.parse_args()
     
     print("="*70)
-    print("ESA SOIL MOISTURE PROCESSOR - FIXED VERSION")
+    print("ESA SOIL MOISTURE PROCESSOR - MONTHLY DATA")
     print("="*70)
     print(f"Base directory: {args.base_dir}")
     print(f"Year filter: {args.year if args.year else 'all'}")
