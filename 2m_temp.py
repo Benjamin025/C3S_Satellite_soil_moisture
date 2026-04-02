@@ -100,9 +100,13 @@ except ImportError:
 # Africa bounding box [N, W, S, E] — CDS convention
 AFRICA_AREA = [40, -20, -40, 55]
 
-# Matching rasterio bounds
+# Precise rasterio bounds (W, S, E, N) matching the actual grid pixel edges
+# WSEN: -20.0, -40.0000011920928955, 55.0000011175870895, 40.0
 AFRICA_BOUNDS = dict(
-    top=40, left=-20, bottom=-40, right=55
+    left=-20.0,
+    bottom=-40.0000011920928955,
+    right=55.0000011175870895,
+    top=40.0,
 )
 
 DATASET   = "reanalysis-era5-single-levels-monthly-means"
@@ -111,7 +115,7 @@ PRODUCT   = "monthly_averaged_reanalysis"
 TIME_STEP = "00:00"
 
 # Years available in ERA5
-ERA5_START_YEAR = 1940
+ERA5_START_YEAR = 1980
 ERA5_END_YEAR   = dt.now().year          # always up-to-date
 
 KELVIN_OFFSET   = 273.15                 # K → °C
@@ -223,7 +227,7 @@ class ERA5AfricaT2MWorkflow:
 
         # ---- Directories ---------------------------------------------------
         if base_dir is None:
-            self.base_dir = Path.home() / "home" / "benjamin" / "Documents" / "Benjamin" / "ERA5" / "Africa" / "T2M"
+            self.base_dir = Path.home() / "Documents" / "ERA5" / "Africa" / "T2M"
         else:
             self.base_dir = Path(base_dir)
 
@@ -485,13 +489,14 @@ class ERA5AfricaT2MWorkflow:
         n_lon = len(lons)
         res   = abs(float(lats[1] - lats[0]))          # grid spacing in degrees
 
-        # Affine transform: upper-left corner → pixel edge
+        # Affine transform using the precise pixel-edge extents defined in
+        # AFRICA_BOUNDS (WSEN: -20, -40.0000011920928955, 55.0000011175870895, 40)
         # from_bounds signature: (west, south, east, north, width, height)
-        west   = float(lons.min()) - res / 2
-        east   = float(lons.max()) + res / 2
-        south  = float(lats.min()) - res / 2
-        north  = float(lats.max()) + res / 2
-        transform = from_bounds(west, south, east, north, n_lon, n_lat)
+        transform = from_bounds(
+            AFRICA_BOUNDS["left"], AFRICA_BOUNDS["bottom"],
+            AFRICA_BOUNDS["right"], AFRICA_BOUNDS["top"],
+            n_lon, n_lat,
+        )
 
         written_tifs: List[Path] = []
         times = ds_t2m[time_dim].values
@@ -893,7 +898,7 @@ if __name__ == "__main__":
 
     print("\nSelect mode:")
     print("  1. Quick test  (2020–2022, 3 years)")
-    print("  2. Full run    (1940–present)")
+    print("  2. Full run    (1980–present)")
     print("  3. Interactive menu")
 
     mode = input("Mode [3]: ").strip() or "3"
