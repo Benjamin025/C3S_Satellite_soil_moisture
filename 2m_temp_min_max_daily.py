@@ -27,35 +27,28 @@ np.nanmax / np.nanmin across every hourly slice.  The daily-statistics
 pipeline is:
   • ~24× faster to download (one value per day instead of 24)
   • Produces equivalent monthly max/min with identical spatial coverage
-  • Each monthly GRIB is ≈6–10 MB vs ≈150–250 MB for the hourly product
+  • Each monthly NetCDF is ≈6–10 MB vs ≈150–250 MB for the hourly product
 
 Dataset   : derived-era5-single-levels-daily-statistics
 Variables : maximum_2m_temperature_since_previous_post_processing  (mx2t)
             minimum_2m_temperature_since_previous_post_processing  (mn2t)
 Period    : 1980 – present  (configurable)
 Region    : Africa  (N=40, W=-20, S=-40, E=55)
-Format    : GRIB (daily) → aggregated GeoTIFFs (°C)
-Units     : Kelvin in raw GRIB → converted to °C on export
+Format    : NetCDF (daily) → aggregated GeoTIFFs (°C)
+Units     : Kelvin in raw NetCDF → converted to °C on export
 
 CDS REQUEST FORMAT — IMPORTANT DIFFERENCES FROM HOURLY
 -------------------------------------------------------
-The daily-statistics dataset requires three extra keys:
-  "daily_statistic" : "daily_mean" | "daily_maximum" | "daily_minimum"
-      → We request BOTH maximum and minimum in the SAME request using:
-         "variable": ["maximum_2m_temperature...", "minimum_2m_temperature..."]
-         "daily_statistic": "daily_maximum"  for mx2t
-         "daily_statistic": "daily_minimum"  for mn2t
-
-  Actually the CDS API for this dataset does NOT allow mixing
-  daily_statistic values in a single request, so we submit TWO
-  requests per month (one for daily_maximum, one for daily_minimum).
-
-  "time_zone"       : "utc+00:00"   (always use UTC)
-  "frequency"       : "1_hourly"    (source frequency used for aggregation)
+The daily-statistics dataset requires specific parameters:
+  "daily_statistic" : "daily_maximum" | "daily_minimum"
+      → We request BOTH maximum and minimum in SEPARATE requests using:
+         "variable": ["maximum_2m_temperature..."] for daily_maximum
+         "variable": ["minimum_2m_temperature..."] for daily_minimum
+  "format"          : "netcdf"  → More reliable than GRIB for this dataset
 
 REQUIREMENTS
 ------------
-    pip install cdsapi cfgrib xarray rasterio numpy matplotlib tqdm
+    pip install cdsapi xarray rasterio numpy matplotlib tqdm
 
 CDS CREDENTIALS
 ---------------
@@ -66,8 +59,8 @@ Create ~/.cdsapirc:
 OUTPUT STRUCTURE
 ----------------
 Each month produces:
-  raw_grib/<year>/era5_daily_tx_<year>_<MM>.grib   ← daily TX (°K)
-  raw_grib/<year>/era5_daily_tn_<year>_<MM>.grib   ← daily TN (°K)
+  raw_nc/<year>/era5_daily_tx_<year>_<MM>.nc   ← daily TX (°K)
+  raw_nc/<year>/era5_daily_tn_<year>_<MM>.nc   ← daily TN (°K)
   geotiffs/max/<year>/era5_t2m_max_africa_<year>_<MM>.tif   ← monthly max (°C)
   geotiffs/min/<year>/era5_t2m_min_africa_<year>_<MM>.tif   ← monthly min (°C)
   previews/max|min/<year>/...preview.png
@@ -81,7 +74,6 @@ import logging
 import os
 import sys
 import time
-import traceback
 import warnings
 from datetime import datetime as dt
 from pathlib import Path
@@ -99,7 +91,6 @@ except ImportError:
     HAS_CDSAPI = False
 
 try:
-    import cfgrib
     import xarray as xr
     HAS_XARRAY = True
 except ImportError:
@@ -147,24 +138,19 @@ AFRICA_BOUNDS = dict(
 )
 
 # CDS dataset for pre-computed daily statistics
-DATASET  = "derived-era5-single-levels-daily-statistics"
+DATASET = "derived-era5-single-levels-daily-statistics"
 
 # Variable names exactly as CDS expects them
 VAR_MAX = "maximum_2m_temperature_since_previous_post_processing"
 VAR_MIN = "minimum_2m_temperature_since_previous_post_processing"
 
-# Short GRIB name aliases (cfgrib reads these as 'mx2t' and 'mn2t')
-GRIB_MAX_NAME = "mx2t"
-GRIB_MIN_NAME = "mn2t"
-
-KELVIN_OFFSET = 273.15   # K → °C
+KELVIN_OFFSET = 273.15
 
 # All days — CDS ignores any day/month combos that don't exist
 ALL_DAYS = [f"{d:02d}" for d in range(1, 32)]
 
-ERA5_DAILY_START_YEAR = 1950   # earliest available in this CDS dataset
 ERA5_START_YEAR = 1980
-ERA5_END_YEAR   = dt.now().year
+ERA5_END_YEAR = dt.now().year
 
 
 # =============================================================================
@@ -204,10 +190,14 @@ def _build_logger(log_dir: Path) -> logging.Logger:
 def check_dependencies() -> bool:
     ok = True
     missing = []
-    if not HAS_CDSAPI:   missing.append("cdsapi")
-    if not HAS_XARRAY:   missing.append("cfgrib xarray")
-    if not HAS_NUMPY:    missing.append("numpy")
-    if not HAS_RASTERIO: missing.append("rasterio")
+    if not HAS_CDSAPI:
+        missing.append("cdsapi")
+    if not HAS_XARRAY:
+        missing.append("xarray")
+    if not HAS_NUMPY:
+        missing.append("numpy")
+    if not HAS_RASTERIO:
+        missing.append("rasterio")
 
     if missing:
         print("❌ Missing required packages:")
@@ -217,8 +207,11 @@ def check_dependencies() -> bool:
     else:
         print("✅ All core dependencies available")
 
-    if not HAS_MPL:  print("⚠️  matplotlib not found — previews will be skipped")
-    if not HAS_TQDM: print("⚠️  tqdm not found — no progress bars")
+    if not HAS_MPL:
+        print("⚠️  matplotlib not found — previews will be skipped")
+    if not HAS_TQDM:
+        print("⚠️  tqdm not found — no progress bars")
+
     return ok
 
 
@@ -232,30 +225,29 @@ class ERA5AfricaDailyMaxMinWorkflow:
     aggregates to monthly maximum and minimum GeoTIFFs.
 
     Aggregation:
-      Monthly MAX = max  of all daily TX (daily-maximum t2m) in the month
-      Monthly MIN = min  of all daily TN (daily-minimum t2m) in the month
+      Monthly MAX = max of all daily TX (daily-maximum t2m) in the month
+      Monthly MIN = min of all daily TN (daily-minimum t2m) in the month
 
-    Two small GRIBs are downloaded per month (one for TX, one for TN),
-    each ~6–10 MB at 0.25° over Africa (vs ~150–250 MB for the hourly product).
-    After aggregation the GRIBs can be deleted (keep_grib=False, default).
+    Two small NetCDF files are downloaded per month (~6-10 MB each at 0.25° over Africa).
+    After aggregation the NetCDF files can be deleted (keep_nc=False, default).
     """
 
     def __init__(
         self,
         base_dir: Optional[Path | str] = None,
-        start_year:      int  = ERA5_START_YEAR,
-        end_year:        int  = ERA5_END_YEAR,
+        start_year: int = ERA5_START_YEAR,
+        end_year: int = ERA5_END_YEAR,
         create_previews: bool = True,
-        keep_grib:       bool = False,
-        retry_limit:     int  = 3,
-        retry_wait:      int  = 60,
+        keep_nc: bool = False,
+        retry_limit: int = 3,
+        retry_wait: int = 60,
     ):
-        self.start_year      = start_year
-        self.end_year        = end_year
+        self.start_year = start_year
+        self.end_year = end_year
         self.create_previews = create_previews
-        self.keep_grib       = keep_grib
-        self.retry_limit     = retry_limit
-        self.retry_wait      = retry_wait
+        self.keep_nc = keep_nc
+        self.retry_limit = retry_limit
+        self.retry_wait = retry_wait
 
         # ---- Directories ---------------------------------------------------
         if base_dir is None:
@@ -267,14 +259,14 @@ class ERA5AfricaDailyMaxMinWorkflow:
             self.base_dir = Path(base_dir)
 
         self.dirs = {
-            "raw_grib":     self.base_dir / "raw_grib",
+            "raw_nc": self.base_dir / "raw_nc",
             "geotiffs_max": self.base_dir / "geotiffs" / "max",
             "geotiffs_min": self.base_dir / "geotiffs" / "min",
-            "previews_max": self.base_dir / "previews"  / "max",
-            "previews_min": self.base_dir / "previews"  / "min",
-            "metadata":     self.base_dir / "metadata",
-            "logs":         self.base_dir / "logs",
-            "status":       self.base_dir / "status",
+            "previews_max": self.base_dir / "previews" / "max",
+            "previews_min": self.base_dir / "previews" / "min",
+            "metadata": self.base_dir / "metadata",
+            "logs": self.base_dir / "logs",
+            "status": self.base_dir / "status",
         }
         for path in self.dirs.values():
             path.mkdir(parents=True, exist_ok=True)
@@ -284,7 +276,7 @@ class ERA5AfricaDailyMaxMinWorkflow:
 
         # ---- Status tracker ------------------------------------------------
         self.status_file = self.dirs["status"] / "progress.json"
-        self.status      = self._load_status()
+        self.status = self._load_status()
 
         # ---- CDS client ----------------------------------------------------
         self._cds = None
@@ -340,11 +332,11 @@ class ERA5AfricaDailyMaxMinWorkflow:
     # PATH HELPERS
     # ------------------------------------------------------------------
 
-    def _grib_path(self, kind: str, year: int, month: int) -> Path:
+    def _nc_path(self, kind: str, year: int, month: int) -> Path:
         """kind: 'tx' (daily max) or 'tn' (daily min)"""
-        d = self.dirs["raw_grib"] / str(year)
+        d = self.dirs["raw_nc"] / str(year)
         d.mkdir(exist_ok=True)
-        return d / f"era5_daily_{kind}_{year}_{month:02d}.grib"
+        return d / f"era5_daily_{kind}_{year}_{month:02d}.nc"
 
     def _tif_path(self, kind: str, year: int, month: int) -> Path:
         """kind: 'max' or 'min'"""
@@ -373,7 +365,7 @@ class ERA5AfricaDailyMaxMinWorkflow:
         return self._cds
 
     # ------------------------------------------------------------------
-    # BUILD CDS REQUESTS  — one month, separate TX and TN requests
+    # BUILD CDS REQUESTS — one month, separate TX and TN requests
     # ------------------------------------------------------------------
 
     def _build_request(
@@ -386,42 +378,45 @@ class ERA5AfricaDailyMaxMinWorkflow:
         ----------
         variable         : VAR_MAX or VAR_MIN
         daily_statistic  : "daily_maximum" or "daily_minimum"
+
+        IMPORTANT: This dataset requires that:
+          1. variable is a list (even with one element)
+          2. daily_statistic matches the variable type
+          3. format="netcdf" for reliable reading
         """
         return {
-            "product_type":    "reanalysis",
-            "variable":        variable,
-            "year":            str(year),
-            "month":           f"{month:02d}",
-            "day":             ALL_DAYS,
+            "product_type": "reanalysis",
+            "variable": [variable],  # Must be a list!
+            "year": str(year),
+            "month": f"{month:02d}",
+            "day": ALL_DAYS,
             "daily_statistic": daily_statistic,
-            "time_zone":       "utc+00:00",
-            "frequency":       "1_hourly",
-            "data_format":     "grib",
-            "download_format": "unarchived",
-            "area":            AFRICA_AREA,   # [N, W, S, E]
+            "time_zone": "utc+00:00",
+            "frequency": "1_hourly",
+            "area": AFRICA_AREA,  # [N, W, S, E]
+            "format": "netcdf",  # Use NetCDF instead of GRIB (more reliable)
         }
 
     # ------------------------------------------------------------------
-    # STEP 1 — DOWNLOAD DAILY TX OR TN GRIB FOR ONE MONTH
+    # STEP 1 — DOWNLOAD DAILY TX OR TN NetCDF FOR ONE MONTH
     # ------------------------------------------------------------------
 
-    def _download_one_grib(
+    def _download_one_nc(
         self,
         year: int,
         month: int,
-        grib_kind: str,          # 'tx' | 'tn'
-        variable: str,           # CDS variable name
-        daily_statistic: str,    # 'daily_maximum' | 'daily_minimum'
+        nc_kind: str,  # 'tx' | 'tn'
+        variable: str,  # CDS variable name
+        daily_statistic: str,  # 'daily_maximum' | 'daily_minimum'
         force: bool = False,
     ) -> Optional[Path]:
-        """Download a single GRIB (TX or TN) for the given month."""
-        grib_path = self._grib_path(grib_kind, year, month)
-        tag       = f"[{year}-{month:02d}][{grib_kind.upper()}]"
+        """Download a single NetCDF file (TX or TN) for the given month."""
+        nc_path = self._nc_path(nc_kind, year, month)
+        tag = f"[{year}-{month:02d}][{nc_kind.upper()}]"
 
-        if not force and grib_path.exists() and grib_path.stat().st_size > 0:
-            size_mb = grib_path.stat().st_size / 1e6
-            self.log.info(f"{tag} GRIB on disk ({size_mb:.1f} MB) — reusing")
-            return grib_path
+        if not force and nc_path.exists():
+            self.log.info(f"{tag} NetCDF already exists — reusing")
+            return nc_path
 
         request = self._build_request(year, month, variable, daily_statistic)
         self.log.info(f"{tag} Submitting CDS request ({daily_statistic}) …")
@@ -429,21 +424,21 @@ class ERA5AfricaDailyMaxMinWorkflow:
 
         for attempt in range(1, self.retry_limit + 1):
             try:
-                client   = self._get_cds_client()
-                tmp_path = grib_path.with_suffix(".downloading")
+                client = self._get_cds_client()
+                tmp_path = nc_path.with_suffix(".downloading")
                 client.retrieve(DATASET, request, str(tmp_path))
 
                 if not tmp_path.exists() or tmp_path.stat().st_size == 0:
                     raise RuntimeError("Downloaded file is empty or missing")
 
-                tmp_path.rename(grib_path)
-                size_mb = grib_path.stat().st_size / 1e6
-                self.log.info(f"{tag} ✅ Downloaded {size_mb:.1f} MB → {grib_path.name}")
-                return grib_path
+                tmp_path.rename(nc_path)
+                size_mb = nc_path.stat().st_size / 1e6
+                self.log.info(f"{tag} ✅ Downloaded {size_mb:.1f} MB → {nc_path.name}")
+                return nc_path
 
             except Exception as exc:
                 self.log.warning(f"{tag} Attempt {attempt}/{self.retry_limit} failed: {exc}")
-                tmp = grib_path.with_suffix(".downloading")
+                tmp = nc_path.with_suffix(".downloading")
                 if tmp.exists():
                     tmp.unlink()
                 if attempt < self.retry_limit:
@@ -457,123 +452,108 @@ class ERA5AfricaDailyMaxMinWorkflow:
     def download_month(
         self, year: int, month: int, force: bool = False
     ) -> Tuple[Optional[Path], Optional[Path]]:
-        """
-        Download both TX (daily maximum) and TN (daily minimum) GRIBs
-        for the given month.  Returns (tx_path, tn_path).
-        """
-        tx_path = self._download_one_grib(
+        """Download both TX and TN NetCDF files for the given month."""
+        tx_path = self._download_one_nc(
             year, month, "tx", VAR_MAX, "daily_maximum", force=force
         )
-        tn_path = self._download_one_grib(
+        tn_path = self._download_one_nc(
             year, month, "tn", VAR_MIN, "daily_minimum", force=force
         )
         return tx_path, tn_path
 
     # ------------------------------------------------------------------
-    # STEP 2 — GRIB → NUMPY ARRAY HELPER
+    # STEP 2 — NetCDF → NUMPY ARRAY
     # ------------------------------------------------------------------
 
-    def _grib_to_array(
-        self, grib_path: Path, expected_var: str, tag: str
-    ) -> Tuple[Optional[np.ndarray], Optional[object], Optional[np.ndarray], Optional[np.ndarray]]:
+    def _nc_to_array(self, nc_path: Path, tag: str) -> Tuple[Optional[np.ndarray], Optional[object], Optional[np.ndarray], Optional[np.ndarray]]:
         """
-        Open a daily-statistics GRIB and return:
+        Open a daily-statistics NetCDF file and return:
           (data_array_3d_K, transform, lats, lons)
         data_array_3d_K has shape (n_days, n_lat, n_lon) in Kelvin.
         Returns (None, None, None, None) on failure.
         """
         try:
-            datasets = cfgrib.open_datasets(str(grib_path))
-        except Exception as exc:
-            self.log.error(f"{tag} GRIB open failed: {exc}")
-            return None, None, None, None
+            # Open the NetCDF file
+            ds = xr.open_dataset(nc_path)
 
-        ds_var = None
-        found_var = None
-        for ds in datasets:
-            for vname in ds.data_vars:
-                if vname == expected_var:
-                    ds_var    = ds
-                    found_var = vname
-                    break
-            if ds_var is not None:
-                break
+            # Find the temperature variable
+            temp_var = None
+            possible_names = ['t2m', '2t', 'temperature', 'mx2t', 'mn2t',
+                            'maximum_2m_temperature_since_previous_post_processing',
+                            'minimum_2m_temperature_since_previous_post_processing']
 
-        # Fallback: try common GRIB short name aliases
-        if ds_var is None:
-            alias_map = {GRIB_MAX_NAME: "max", GRIB_MIN_NAME: "min"}
-            for ds in datasets:
-                for vname in ds.data_vars:
-                    if vname in alias_map:
-                        ds_var    = ds
-                        found_var = vname
+            for var in ds.data_vars:
+                var_lower = var.lower()
+                for name in possible_names:
+                    if name.lower() in var_lower:
+                        temp_var = var
                         break
-                if ds_var is not None:
+                if temp_var:
                     break
 
-        if ds_var is None:
-            avail = [list(d.data_vars) for d in datasets]
-            self.log.error(
-                f"{tag} Variable '{expected_var}' not found in GRIB. "
-                f"Available: {avail}"
+            # If still not found, take the first data variable
+            if temp_var is None and len(ds.data_vars) > 0:
+                temp_var = list(ds.data_vars)[0]
+                self.log.info(f"{tag} Using first variable: {temp_var}")
+
+            if temp_var is None:
+                self.log.error(f"{tag} No data variables found in {nc_path}")
+                ds.close()
+                return None, None, None, None
+
+            # Get the data array
+            da = ds[temp_var]
+
+            # Handle dimensions - ensure time is first dimension
+            if 'time' in da.dims:
+                if da.dims[0] != 'time':
+                    da = da.transpose('time', ...)
+                data_k = da.values.astype(np.float32)
+            elif 'valid_time' in da.dims:
+                da = da.transpose('valid_time', ...)
+                data_k = da.values.astype(np.float32)
+            else:
+                # Single time step
+                data_k = da.values.astype(np.float32)[np.newaxis, ...]
+
+            # Handle missing values
+            data_k = np.where(np.abs(data_k) > 1e10, np.nan, data_k)
+
+            # Get lat/lon coordinates
+            lats = ds.coords['latitude'].values
+            lons = ds.coords['longitude'].values
+            n_lat, n_lon = len(lats), len(lons)
+
+            # Check latitude orientation (should be north to south)
+            if lats[0] < lats[-1]:
+                # Latitude is increasing (south to north), flip it
+                data_k = data_k[:, ::-1, :] if data_k.ndim == 3 else data_k[::-1, :]
+                lats = lats[::-1]
+
+            # Create transform
+            transform = from_bounds(
+                AFRICA_BOUNDS["left"], AFRICA_BOUNDS["bottom"],
+                AFRICA_BOUNDS["right"], AFRICA_BOUNDS["top"],
+                n_lon, n_lat,
             )
-            for d in datasets:
-                d.close()
+
+            n_days = data_k.shape[0]
+            self.log.info(f"{tag} [NetCDF] {n_days} daily steps — grid {n_lat}×{n_lon}")
+
+            ds.close()
+            return data_k, transform, lats, lons
+
+        except Exception as e:
+            self.log.error(f"{tag} Failed to read NetCDF {nc_path.name}: {e}")
+            import traceback
+            self.log.debug(traceback.format_exc())
             return None, None, None, None
-
-        # Identify time dimension
-        da       = ds_var[found_var]
-        time_dim = None
-        for candidate in ("valid_time", "time", "step"):
-            if candidate in da.dims:
-                time_dim = candidate
-                break
-
-        if time_dim is None:
-            self.log.error(
-                f"{tag} Cannot identify time dim. Dims: {list(da.dims)}"
-            )
-            for d in datasets:
-                d.close()
-            return None, None, None, None
-
-        lats = ds_var["latitude"].values
-        lons = ds_var["longitude"].values
-        n_lat, n_lon = len(lats), len(lons)
-        lat_desc = lats[0] > lats[-1]
-
-        n_steps = da.sizes[time_dim]
-        self.log.info(
-            f"{tag} Loaded {n_steps} daily steps — "
-            f"grid: {n_lat}×{n_lon}"
-        )
-
-        transform = from_bounds(
-            AFRICA_BOUNDS["left"], AFRICA_BOUNDS["bottom"],
-            AFRICA_BOUNDS["right"], AFRICA_BOUNDS["top"],
-            n_lon, n_lat,
-        )
-
-        data_k = da.values.astype("float32")   # (days, lat, lon)
-
-        # Mask fill values
-        fill_val = getattr(da, "_FillValue", 9.999e20)
-        data_k[data_k >= fill_val * 0.1] = np.nan
-
-        # Ensure top→bottom latitude order (descending)
-        if not lat_desc:
-            data_k = data_k[:, ::-1, :]
-
-        for d in datasets:
-            d.close()
-
-        return data_k, transform, lats, lons
 
     # ------------------------------------------------------------------
     # STEP 3 — AGGREGATE TX/TN → MONTHLY MAX/MIN GeoTIFFs
     # ------------------------------------------------------------------
 
-    def grib_to_maxmin_geotiffs(
+    def nc_to_maxmin_geotiffs(
         self,
         year: int,
         month: int,
@@ -581,14 +561,14 @@ class ERA5AfricaDailyMaxMinWorkflow:
         tn_path: Path,
     ) -> dict:
         """
-        Open the two daily-statistics GRIBs and reduce:
+        Open the two daily-statistics NetCDF files and reduce:
           Monthly MAX = np.nanmax(daily TX values)   → monthly-maximum
           Monthly MIN = np.nanmin(daily TN values)   → monthly-minimum
 
         Writes two GeoTIFFs (°C).  Returns {'max': Path, 'min': Path} or {}.
         """
         if not HAS_XARRAY or not HAS_RASTERIO:
-            self.log.error("cfgrib/xarray or rasterio not available")
+            self.log.error("xarray or rasterio not available")
             return {}
 
         tag = f"[{year}-{month:02d}]"
@@ -597,51 +577,47 @@ class ERA5AfricaDailyMaxMinWorkflow:
         n_lon = n_lat = None
 
         # ---- Process TX (daily maximum → monthly max) ----------------------
-        self.log.info(f"{tag} Reading daily TX GRIB …")
-        tx_k, transform, lats, lons = self._grib_to_array(
-            tx_path, GRIB_MAX_NAME, f"{tag}[TX]"
-        )
+        self.log.info(f"{tag} Reading daily TX NetCDF …")
+        tx_k, transform, lats, lons = self._nc_to_array(tx_path, f"{tag}[TX]")
         if tx_k is None:
-            self.log.error(f"{tag} TX GRIB processing failed")
+            self.log.error(f"{tag} TX NetCDF processing failed")
             return {}
         n_lat, n_lon = tx_k.shape[1], tx_k.shape[2]
 
         # Monthly MAX = max of all daily TX values in the month
-        max_k = np.nanmax(tx_k, axis=0)   # (lat, lon)
+        max_k = np.nanmax(tx_k, axis=0)  # (lat, lon)
         max_c = (max_k - KELVIN_OFFSET).astype("float32")
         max_c = np.where(np.isfinite(max_c), max_c, -9999.0).astype("float32")
         del tx_k
 
         # ---- Process TN (daily minimum → monthly min) ----------------------
-        self.log.info(f"{tag} Reading daily TN GRIB …")
-        tn_k, _, _, _ = self._grib_to_array(
-            tn_path, GRIB_MIN_NAME, f"{tag}[TN]"
-        )
+        self.log.info(f"{tag} Reading daily TN NetCDF …")
+        tn_k, _, _, _ = self._nc_to_array(tn_path, f"{tag}[TN]")
         if tn_k is None:
-            self.log.error(f"{tag} TN GRIB processing failed")
+            self.log.error(f"{tag} TN NetCDF processing failed")
             return {}
 
         # Monthly MIN = min of all daily TN values in the month
-        min_k = np.nanmin(tn_k, axis=0)   # (lat, lon)
+        min_k = np.nanmin(tn_k, axis=0)  # (lat, lon)
         min_c = (min_k - KELVIN_OFFSET).astype("float32")
         min_c = np.where(np.isfinite(min_c), min_c, -9999.0).astype("float32")
         del tn_k
 
         # ---- Write GeoTIFFs ------------------------------------------------
         profile = {
-            "driver":     "GTiff",
-            "dtype":      "float32",
-            "width":      n_lon,
-            "height":     n_lat,
-            "count":      1,
-            "crs":        "EPSG:4326",
-            "transform":  transform,
-            "nodata":     -9999.0,
-            "compress":   "lzw",
-            "tiled":      True,
+            "driver": "GTiff",
+            "dtype": "float32",
+            "width": n_lon,
+            "height": n_lat,
+            "count": 1,
+            "crs": "EPSG:4326",
+            "transform": transform,
+            "nodata": -9999.0,
+            "compress": "lzw",
+            "tiled": True,
             "blockxsize": 256,
             "blockysize": 256,
-            "predictor":  2,
+            "predictor": 2,
         }
 
         for kind, arr in (("max", max_c), ("min", min_c)):
@@ -673,7 +649,7 @@ class ERA5AfricaDailyMaxMinWorkflow:
         self, year: int, month: int, tif_paths: dict
     ) -> dict:
         meta: dict = {
-            "year":  year,
+            "year": year,
             "month": f"{month:02d}",
             "generated_at": dt.utcnow().isoformat(),
             "source_dataset": DATASET,
@@ -694,10 +670,10 @@ class ERA5AfricaDailyMaxMinWorkflow:
                 continue
             try:
                 with rasterio.open(tif_path) as src:
-                    data   = src.read(1)
+                    data = src.read(1)
                     nodata = src.nodata if src.nodata is not None else -9999.0
-                    valid  = data[data != nodata]
-                    valid  = valid[np.isfinite(valid)]
+                    valid = data[data != nodata]
+                    valid = valid[np.isfinite(valid)]
 
                 if len(valid) == 0:
                     self.log.warning(
@@ -706,10 +682,10 @@ class ERA5AfricaDailyMaxMinWorkflow:
                     continue
 
                 stats = {
-                    "min_degC":     float(np.min(valid)),
-                    "max_degC":     float(np.max(valid)),
-                    "mean_degC":    float(np.mean(valid)),
-                    "std_degC":     float(np.std(valid)),
+                    "min_degC": float(np.min(valid)),
+                    "max_degC": float(np.max(valid)),
+                    "mean_degC": float(np.mean(valid)),
+                    "std_degC": float(np.std(valid)),
                     "valid_pixels": int(len(valid)),
                 }
                 meta[kind] = stats
@@ -752,10 +728,10 @@ class ERA5AfricaDailyMaxMinWorkflow:
             vmin = np.nanpercentile(plot, 2)
             vmax = np.nanpercentile(plot, 98)
 
-            left   = transform.c
-            top    = transform.f
-            right  = left + transform.a * n_lon
-            bottom = top  + transform.e * n_lat
+            left = transform.c
+            top = transform.f
+            right = left + transform.a * n_lon
+            bottom = top + transform.e * n_lat
             extent = [left, right, bottom, top]
 
             cmap_name = "YlOrRd" if kind == "max" else "YlGnBu_r"
@@ -785,7 +761,7 @@ class ERA5AfricaDailyMaxMinWorkflow:
                 fontsize=13, fontweight="bold",
             )
             ax.set_xlabel("Longitude", fontsize=10)
-            ax.set_ylabel("Latitude",  fontsize=10)
+            ax.set_ylabel("Latitude", fontsize=10)
             ax.grid(True, alpha=0.3, linewidth=0.5)
 
             plt.tight_layout()
@@ -810,11 +786,11 @@ class ERA5AfricaDailyMaxMinWorkflow:
     ) -> bool:
         """
         Full pipeline for one calendar month:
-          1. Download daily TX GRIB (daily_maximum variable)
-          2. Download daily TN GRIB (daily_minimum variable)
+          1. Download daily TX NetCDF (daily_maximum variable)
+          2. Download daily TN NetCDF (daily_minimum variable)
           3. Aggregate to monthly max/min → write GeoTIFFs
           4. Validate + write metadata JSON
-          5. Optionally delete raw GRIBs
+          5. Optionally delete raw NetCDF files
         Returns True on success.
         """
         tag = f"[{year}-{month:02d}]"
@@ -842,7 +818,7 @@ class ERA5AfricaDailyMaxMinWorkflow:
             return False
 
         # 3. Aggregate → GeoTIFFs
-        tif_paths = self.grib_to_maxmin_geotiffs(
+        tif_paths = self.nc_to_maxmin_geotiffs(
             year, month, tx_path, tn_path
         )
         if not tif_paths:
@@ -853,12 +829,12 @@ class ERA5AfricaDailyMaxMinWorkflow:
         # 4. Validate + metadata
         self.validate_month(year, month, tif_paths)
 
-        # 5. Optionally delete raw GRIBs
-        if not self.keep_grib:
-            for grib_path in (tx_path, tn_path):
-                if grib_path.exists():
-                    grib_path.unlink()
-            self.log.info(f"{tag} Daily GRIBs deleted (keep_grib=False)")
+        # 5. Optionally delete raw NetCDF files
+        if not self.keep_nc:
+            for nc_path in (tx_path, tn_path):
+                if nc_path.exists():
+                    nc_path.unlink()
+            self.log.info(f"{tag} Daily NetCDF files deleted (keep_nc=False)")
 
         self._mark_done(year, month)
         self.log.info(f"{tag} ✅ Complete")
@@ -885,11 +861,11 @@ class ERA5AfricaDailyMaxMinWorkflow:
     def run(
         self,
         start_year: Optional[int] = None,
-        end_year:   Optional[int] = None,
-        force:      bool = False,
+        end_year: Optional[int] = None,
+        force: bool = False,
     ) -> dict:
         sy = start_year or self.start_year
-        ey = end_year   or self.end_year
+        ey = end_year or self.end_year
 
         self.log.info(f"\n{'='*70}")
         self.log.info(
@@ -903,7 +879,7 @@ class ERA5AfricaDailyMaxMinWorkflow:
         for year in range(sy, ey + 1):
             res = self.process_year(year, force=force)
             overall_success.extend([f"{year}-{m:02d}" for m in res["success"]])
-            overall_failed.extend( [f"{year}-{m:02d}" for m in res["failed"]])
+            overall_failed.extend([f"{year}-{m:02d}" for m in res["failed"]])
 
         self.log.info(f"\n{'='*70}")
         self.log.info("PIPELINE COMPLETE")
@@ -914,10 +890,10 @@ class ERA5AfricaDailyMaxMinWorkflow:
             self.log.warning(f"  Failed: {overall_failed}")
 
         summary = {
-            "run_at":  dt.utcnow().isoformat(),
-            "period":  f"{sy}–{ey}",
+            "run_at": dt.utcnow().isoformat(),
+            "period": f"{sy}–{ey}",
             "success": overall_success,
-            "failed":  overall_failed,
+            "failed": overall_failed,
         }
         summary_path = (
             self.dirs["status"] /
@@ -935,21 +911,21 @@ class ERA5AfricaDailyMaxMinWorkflow:
     def inventory(self) -> None:
         print(f"\n{'─'*70}")
         print(
-            f"{'YR-MO':>7}  {'TX GRIB':>8}  {'TN GRIB':>8}  "
+            f"{'YR-MO':>7}  {'TX NC':>8}  {'TN NC':>8}  "
             f"{'MAX TIF':>8}  {'MIN TIF':>8}  {'DONE':>6}"
         )
         print(f"{'─'*70}")
         for year in range(self.start_year, self.end_year + 1):
             for month in range(1, 13):
-                tx   = self._grib_path("tx", year, month).exists()
-                tn   = self._grib_path("tn", year, month).exists()
+                tx = self._nc_path("tx", year, month).exists()
+                tn = self._nc_path("tn", year, month).exists()
                 maxt = self._tif_path("max", year, month).exists()
                 mint = self._tif_path("min", year, month).exists()
                 done = self._is_done(year, month)
                 print(
                     f"{year}-{month:02d}  "
-                    f"{'✅' if tx   else '—':>8}  "
-                    f"{'✅' if tn   else '—':>8}  "
+                    f"{'✅' if tx else '—':>8}  "
+                    f"{'✅' if tn else '—':>8}  "
                     f"{'✅' if maxt else '—':>8}  "
                     f"{'✅' if mint else '—':>8}  "
                     f"{'✅' if done else '—':>6}"
@@ -967,7 +943,7 @@ def interactive_menu() -> None:
     print("=" * 70)
     print(
         "INFO: Uses 'derived-era5-single-levels-daily-statistics'.\n"
-        "      Downloads TWO small GRIBs per month (~6–10 MB each):\n"
+        "      Downloads TWO small NetCDF files per month (~6–10 MB each):\n"
         "        TX = daily_maximum (max_2m_temp_since_post_processing)\n"
         "        TN = daily_minimum (min_2m_temp_since_post_processing)\n"
         "      Monthly max = max(all TX); Monthly min = min(all TN).\n"
@@ -979,12 +955,12 @@ def interactive_menu() -> None:
     sy = int(sy) if sy.isdigit() else ERA5_START_YEAR
     ey = int(ey) if ey.isdigit() else ERA5_END_YEAR
 
-    keep_grib = input("Keep raw daily GRIBs? (y/n) [n]: ").strip().lower() == "y"
-    previews  = input("Create preview PNGs?  (y/n) [y]: ").strip().lower() != "n"
+    keep_nc = input("Keep raw daily NetCDF files? (y/n) [n]: ").strip().lower() == "y"
+    previews = input("Create preview PNGs?  (y/n) [y]: ").strip().lower() != "n"
 
     wf = ERA5AfricaDailyMaxMinWorkflow(
         start_year=sy, end_year=ey,
-        keep_grib=keep_grib, create_previews=previews,
+        keep_nc=keep_nc, create_previews=previews,
     )
 
     while True:
@@ -1004,7 +980,7 @@ def interactive_menu() -> None:
         elif choice == "2":
             y = input("Year: ").strip()
             if y.isdigit():
-                wf.process_year(int(y))
+                wf.process_year(int(y), force=True)
             else:
                 print("Invalid year.")
 
@@ -1012,7 +988,7 @@ def interactive_menu() -> None:
             y = input("Year:  ").strip()
             m = input("Month: ").strip()
             if y.isdigit() and m.isdigit():
-                wf.process_month(int(y), int(m))
+                wf.process_month(int(y), int(m), force=True)
             else:
                 print("Invalid input.")
 
@@ -1034,6 +1010,16 @@ if __name__ == "__main__":
     if not check_dependencies():
         sys.exit(1)
 
+    # Clean up any existing small/corrupt GRIB files from previous runs
+    base_dir = Path.home() / "Documents" / "Benjamin" / "ERA5" / "Africa" / "T2M_MaxMin_Daily"
+    if base_dir.exists():
+        grib_dir = base_dir / "raw_grib"
+        if grib_dir.exists():
+            print("\nCleaning up old GRIB files (switching to NetCDF format)...")
+            import shutil
+            shutil.rmtree(grib_dir)
+            print("  Removed raw_grib directory")
+
     print("\nSelect mode:")
     print("  1. Quick test  (single month: 2020-01)")
     print("  2. Full run    (1980–present, all months)")
@@ -1042,16 +1028,16 @@ if __name__ == "__main__":
     mode = input("Mode [3]: ").strip() or "3"
 
     if mode == "1":
-        wf = ERA5AfricaDailyMaxMinWorkflow(start_year=2020, end_year=2020)
-        wf.process_month(2020, 1)
+        wf = ERA5AfricaDailyMaxMinWorkflow(start_year=2020, end_year=2020, keep_nc=False)
+        wf.process_month(2020, 1, force=True)
 
     elif mode == "2":
         wf = ERA5AfricaDailyMaxMinWorkflow(
             start_year=ERA5_START_YEAR,
             end_year=ERA5_END_YEAR,
-            keep_grib=False,
+            keep_nc=False,
         )
-        wf.run()
+        wf.run(force=True)
 
     else:
         interactive_menu()
